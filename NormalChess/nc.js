@@ -4,6 +4,7 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
 
+
 function move(divId, amt, t) {
     var elements = document.getElementById(divId).children;
     for (var i = 0; i < elements.length; i++) {
@@ -142,4 +143,9 @@ socket.on("start", function(v) {
   move("game", 0, 1);
   move("lobby", 120, 1);
 
+});
+let b = document.getElementById("resign");
+b.addEventListener("click", function() {
+  list.innerHTML = "";
+  socket.emit("resign", game.gameId);
 });

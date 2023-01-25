@@ -120,7 +120,7 @@ io.on('connection', (socket) => {
         v.players.every(pp => {
             if (p.ip == v.host.ip && v.host.username == p.username)
             {
-                console.log('Removing ' + v.gameName + " due to " + p.username + " being the host.");
+                console.log('Removing ' + p.username + " from " + v.gameName);
                 shouldDelete = true;
                 return false;
             }
@@ -128,6 +128,7 @@ io.on('connection', (socket) => {
             {
               console.log('Removing ' + p.username + " from " + v.gameName);
               remove(v.players, pp);
+              remove(v.playerNames, pp);
               v.playerNames = [];
               v.players.forEach(c => {
                 v.playerNames.push(c.username);
@@ -141,11 +142,22 @@ io.on('connection', (socket) => {
         });
         if (shouldDelete)
         {
-            remove(lobbies, v);
-            v.players.forEach(pp => {
-              pp.inLobby = false;
-              showLobbies(pp.socket, pp);
-            });
+            if (v.players.length != 0)
+            {
+              remove(v.players, p);
+              remove(v.playerNames, p.username);
+              var lo = {gameName: g.gameName, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};        
+              if (p.ip == g.host.ip && g.host.username == p.username)
+                v.host = g.players[0];
+              v.players.forEach(pp => {
+                  lo.isHost = pp.ip == g.host.ip && g.host.username == pp.username
+                  pp.socket.emit("lobby", {lobby: lo});
+              });
+            }
+            else
+            {
+              remove(lobbies, v);
+            }
             return false;
         }
         return true;
@@ -167,6 +179,7 @@ io.on('connection', (socket) => {
           var g = getLobby(id);
           if (g == null)
           {
+            p.socket.emit("error", "game not found");
             showLobbies(socket, p);
             return;
           }
@@ -187,11 +200,17 @@ io.on('connection', (socket) => {
 
     
     socket.on('join', (v) => {
-        if (p.inLobby)
+        if (!p.inLobby)
+        {
+          p.socket.emit("error", "you are not in a lobby");
           return;
+        }
         var g = getLobby(v);
         if (g == null)
+        {
+          p.socket.emit("error", "that game was not found");
           return;
+        }
 
         p.isWhite = false;
         p.inLobby = true;
@@ -229,7 +248,7 @@ io.on('connection', (socket) => {
         p.socket.emit("error", "not enough players");
         return;
       }
-
+      g.started = true;
       var white = getRandomInt(2);
       g.players[white].isWhite = true;
         
@@ -240,11 +259,17 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leave', (v) => {
-      if (!p.inLobby)
-        return;
-      var g = getLobby(v);
-      if (g == null)
-        return;
+        if (!p.inLobby)
+        {
+          p.socket.emit("error", "you are not in a lobby");
+          return;
+        }
+        var g = getLobby(v);
+        if (g == null)
+        {
+          p.socket.emit("error", "that game was not found");
+          return;
+        }
 
       g.playerCount--;
       remove(g.players, p);
@@ -272,7 +297,10 @@ io.on('connection', (socket) => {
 
     socket.on('create', (v) => {
         if (p.inLobby)
+        {
+          p.socket.emit("error", "you are in a lobby");
           return;
+        }
         var name = v["name"].replace(/<[^>]*>?/gm, '');
 
         p.isWhite = false;

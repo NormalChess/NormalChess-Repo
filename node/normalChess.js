@@ -39,6 +39,7 @@ class Lobby {
     playerNames = [];
     players = [];
     host = null;
+    started = false;
     isPrivate = false;
 
     constructor(name)
