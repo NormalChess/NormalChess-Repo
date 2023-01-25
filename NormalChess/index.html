@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="A perfectly normal version of chess.">
+        <meta name="keywords" content="Chess, Varient">
+        <meta name="author" content="Kade">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Normal Chess</title>
+        <link href="style.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div id="nickname">
+            <div class="simple-container">
+                <h1>Normal Chess</h1>
+                <h2 style="color:lightcoral">Created by Kade</h2>
+                <p></p>
+                <div id="textbox-container">
+                    <p style="color:lightblue;">Enter a nickname (leave blank for random)</p>
+                    <form id="form" action="">
+                        <input type="text" id="textbox">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="lobbies">
+            <div class="simple-container">
+                <h1>Current Lobbies</h1>
+                <p id="name"></p>
+                <div id="lobs">
+
+                </div>
+
+                <div id="textbox-container">
+                    <form id="lobbyForm" action="">
+                        <p style="color:lightblue;">Create Lobby:</p>
+                        <input type="text" id="textbox" class="lobbyText"/>
+                        <p>Make it private?</p>
+                        <input type="checkbox" id="private" class ="checkLobby" value="Private?"/>
+                        <p></p>
+                        <hr class="rounded">
+                        <p style="color:lightblue;">Join through code:</p>
+                        <input type="text" id="textbox" class="codeText"/>
+                    </form>
+                </div>
+            
+            </div>
+        </div>
+
+        <div id="lobby">
+            <div class="simple-container">
+                <h1 id="lobbyName"></h1>
+                <div id="players">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div id="game">
+            <div class="simple-container">
+                <p id ="opText"></p>
+                <div class="chess">
+
+                </div>
+                <p id ="youText"></p>
+                <div class="chat">
+
+                </div>
+                <button id ="resign">Resign</button>
+            </div>
+        </div>
+
+        <script src="https://cdn.socket.io/socket.io-3.0.5.js"></script>
+        <script src="/nc.js"></script>
+    </body>
+</html>

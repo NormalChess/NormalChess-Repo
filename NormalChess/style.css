@@ -1,0 +1,157 @@
+/* 
+    from https://gist.github.com/ZachSaucier/8295d9dc926d7064ff0d4f3f04b35b55
+*/
+
+@import 'https://fonts.googleapis.com/css?family=Open+Sans';
+
+* {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	line-height: 1.75em;
+	font-size: 16px;
+	background-color: #222;
+	color: #aaa;
+    overflow: hidden;
+}
+
+#textbox-container {
+    position: relative;
+    height: 4%;
+ }
+
+ 
+
+ /* Rounded border */
+hr.rounded {
+	border-top: 8px solid #bbb;
+	border-radius: 5px;
+  }
+ 
+ #textbox {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: #222;
+    font-size: 16px;
+    color: lightblue;
+    border: 1px solid white; /* add a 1px solid black border */
+    padding: 1em; /* add some padding for the text */
+    box-sizing: border-box; /* include the border and padding in the overall size of the textbox */
+    outline: none; /* remove the default outline */
+    border-radius: 20px; /* round the corners with a 20px radius */
+ }
+
+ 
+ 
+ #textbox:focus {
+    outline: 1.25px solid lightblue;
+    box-shadow: 0 0 0 2px lavender;
+ }
+ #textbox:hover {
+    outline: 1.25px solid lightblue;
+    box-shadow: 0 0 0 2px lavender;
+ }
+
+ label {
+    position: relative;
+    
+ }
+
+.simple-container {
+    position: absolute;
+	padding-bottom: 10%;
+    display: flex;
+	right: 25%;
+	width: 50%;
+    justify-content: center; /* center items horizontally */
+    height: 100%; /* or any other height */
+    flex-direction: column;
+    text-align: center;
+	align-items: center;
+}
+
+.simple-print {
+	fill: white;
+	stroke: white;
+}
+.simple-print svg {
+	height: 100%;
+}
+
+.simple-close {
+	color: white;
+	border-color: white;
+}
+
+.simple-ext-info {
+	border-top: 1px solid #aaa;
+}
+
+p {
+	font-size: 16px;
+}
+
+h1 {
+	font-size: 60px;
+	line-height: 34px;
+}
+
+h2 {
+	font-size: 30px;
+	line-height: 25px;
+}
+
+h3 {
+	font-size: 20px;
+	line-height: 27px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #D8D8D8;
+	border-top: 1px solid #D8D8D8;
+}
+
+hr {
+	height: 1px;
+	background-color: #d8d8d8;
+	border: none;
+	width: 100%;
+	margin: 0px;
+}
+
+a[href] {
+	color: #1e8ad6;
+}
+
+a[href]:hover {
+	color: #3ba0e6;
+}
+
+img {
+	max-width: 100%;
+}
+
+li {
+	line-height: 1.5em;
+}
+
+aside,
+[class *= "sidebar"],
+[id *= "sidebar"] {
+	max-width: 90%;
+	margin: 0 auto;
+	border: 1px solid lightgrey;
+	padding: 5px 15px;
+}
+
+@media (min-width: 1921px) {
+	body {
+		font-size: 18px;
+	}
+}
