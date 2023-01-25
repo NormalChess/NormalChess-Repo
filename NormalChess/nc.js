@@ -12,9 +12,9 @@ function move(divId, amt, t) {
     }
   }
 
-move("lobbies", -120, 0.01);
-move("lobby", -220, 0.01);
-move("game", -320, 0.01);
+move("lobbies", 100, 0.01);
+move("lobby", 100, 0.01);
+move("game", 100, 0.01);
 
 var form = document.getElementById('form');
 var form2 = document.getElementById('lobbyForm');
