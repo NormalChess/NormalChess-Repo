@@ -1,4 +1,4 @@
-// NormalChess.js (https://github.com/NormalChess/NormalChess)
+// NormalChess.js (https://github.com/NormalChess/NormalChess-Repo)
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
