@@ -33,6 +33,7 @@ class Player {
 }
 
 class Lobby {
+    op = "";
     gameId = "";
     gameName = "";
     playerCount = 0;

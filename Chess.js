@@ -92,8 +92,8 @@ class Move {
     pos = [];
     constructor(_pos,_type, _moveType, _capture)
     {
-        mName = convertPieceToName(_type, _moveType, _pos);
-        pos = _pos;
+        this.mName = convertPieceToName(_type, _moveType, _pos);
+        this.pos = _pos;
     }
 }
 
@@ -106,9 +106,9 @@ class Piece {
     move = null;
     constructor(_type, _pos, _c)
     {
-        color = _c;
-        type = type;
-        pos = _pos;
+        this.color = _c;
+        this.type = _type;
+        this.pos = _pos;
     }
 
     move(_pos, capture)

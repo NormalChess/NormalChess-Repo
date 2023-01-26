@@ -119,7 +119,7 @@ b.addEventListener("click", function() {
 });
 
 let bbb = document.getElementById("resign");
-b.addEventListener("click", function() {
+bbb.addEventListener("click", function() {
     socket.emit("resign", gameId);
 });
 
@@ -150,35 +150,53 @@ socket.on("lobby", function(v) {
 
 socket.on("start", function(v) {
   // Create chess and stuff
-  board = v["board"];
+  var board = v["board"];
+  var l = v["lobby"];
+  console.log(l);
+  move("nickname", 120, 1);
   move("lobbies", 120, 1);
   move("game", 0, 1);
   move("lobby", 120, 1);
 
+  var op = document.getElementById("opText");
+  op.innerHTML = l.op;
+  
+  var you = document.getElementById("youText");
+  you.innerHTML = username;
+
   // Get the div element where the chessboard will be placed
   var chessboard = document.getElementById("chess");
-
+  
   chessboard.innerHTML = "";
-
+  chessboard.style.width = "45%";
+  chessboard.style.height = "75%";
+  
   // Create 8 rows and 8 cells for each row
   for (var i = 0; i < 8; i++) {
       for (var j = 0; j < 8; j++) {
-          var cell = chessboard.appendChild(document.createElement("div"));
-          cell.style.width = "12.5%";
+          var cell = document.createElement("div");
+          cell.style.height = "calc(100% / 8)";
+          cell.style.width = "calc(100% / 8)";
           cell.style.float = "left";
-          cell.style.paddingBottom = "12.5%";
           cell.style.boxSizing = "border-box";
-
+  
           // Alternate between green and white colors
           if ((i + j) % 2 === 0) {
-              cell.style.backgroundColor = "green";
+              cell.style.backgroundColor = "#769656";
           } else {
-              cell.style.backgroundColor = "white";
+              cell.style.backgroundColor = "#eeeed2";
           }
-
+  
           // Add the cell to the chessboard div
           chessboard.appendChild(cell);
       }
   }
+
+  chessboard.style.display = "flex";
+  chessboard.style.flexWrap = "wrap";
+  chessboard.style.alignItems = "center";
+  chessboard.style.justifyContent = "center";
+  chessboard.style.maxWidth = "55%";
+  chessboard.style.maxHeight = "70%";
 
 });

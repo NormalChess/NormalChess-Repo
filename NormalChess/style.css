@@ -23,7 +23,65 @@ body {
     height: 4%;
  }
 
+ .hugeBruh {
+	width: 120%;
+	flex: 0 0 120%;
+ }
+
+ .moves {
+	text-align: left;
+	align-items: left;
+	flex: 0 0 50%;
+	margin-left: -65%;
+	margin-top: 2%;
+	padding-bottom: 1%;
+ }
+
+ .chat {
+	text-align: left;
+	align-items: left;
+	order: 2;
+	flex: 0 0 50%;
+	margin-left: -65%;
+	margin-top: 25%;
+	padding-top: 1%;
+ }
  
+ .leFlex {
+	margin-top: 2%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	width: 100%;
+	height: 75%;
+	list-style-type: none;
+ }
+
+.mList {
+	width: 75%;
+	height: 75%;
+	background-color: rgb(19, 19, 19);
+	z-index: 1;
+    font-size: 16px;
+    box-sizing: border-box; /* include the border and padding in the overall size of the textbox */
+    outline: none; /* remove the default outline */
+    border-radius: 20px; /* round the corners with a 20px radius */
+	padding-left: 3%;
+	padding-top: 1%;
+}
+
+.cList {
+	width: 75%;
+	height: 80%;
+	background-color: rgb(19, 19, 19);
+	z-index: 1;
+    font-size: 16px;
+    box-sizing: border-box; /* include the border and padding in the overall size of the textbox */
+    outline: none; /* remove the default outline */
+    border-radius: 20px; /* round the corners with a 20px radius */
+	padding-left: 3%;
+	padding-top: 1%;
+}
 
  /* Rounded border */
 hr.rounded {

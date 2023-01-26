@@ -107,6 +107,23 @@ app.use((req, res, next) => {
   }
 })
 
+function start(g, p)
+{
+  console.log("Starting " + g.gameId + " with " + p.username + " vs " + g.op);
+
+  g.board = new chess.Board();
+
+  var lo = {gameName: g.gameName, op: g.op, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
+
+  
+  var white = getRandomInt(2);
+  g.players[white].isWhite = true;
+    
+    g.players.forEach(pp => {
+      pp.socket.emit("start", {board: g.board, lobby: lo});
+    });
+}
+
 io.on('connection', (socket) => {
     var p = new nc.Player(socket.conn.remoteAddress);
     p.socket = socket;
@@ -129,13 +146,14 @@ io.on('connection', (socket) => {
             {
               console.log('Removing ' + p.username + " from " + v.gameName);
               remove(v.players, pp);
+              v.op = "";
               v.playerNames = [];
               v.players.forEach(c => {
                 v.playerNames.push(c.username);
               });
               v.playerCount--;
               v.players.forEach(pp => {
-                pp.socket.emit('lobby', {lobby: {isHost: pp.ip == v.host.ip && v.host.username == p.username, gameName: v.gameName, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: v.gameId, playerCount: v.playerCount, players: v.playerNames}});
+                pp.socket.emit('lobby', {lobby: {isHost: pp.ip == v.host.ip && v.host.username == p.username, gameName: v.gameName, link: "http://normalchess.com/?challenge=" + v.gameId, gameId: v.gameId, playerCount: v.playerCount, players: v.playerNames}});
               });
             }
             return true;
@@ -196,6 +214,7 @@ io.on('connection', (socket) => {
 
         p.isWhite = false;
         p.inLobby = true;
+        g.op = p.username;
         g.playerCount++;
         var lo = {gameName: g.gameName, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
         
@@ -230,18 +249,7 @@ io.on('connection', (socket) => {
         p.socket.emit("error", "not enough players");
         return;
       }
-
-      console.log("Starting " + g.gameId);
-
-      g.board = new chess.Board();
-      
-      var white = getRandomInt(2);
-      g.players[white].isWhite = true;
-        
-        g.players.forEach(pp => {
-          lo.isHost = pp.ip == g.host.ip && g.host.username == pp.username
-          pp.socket.emit("start", {board: board});
-        });
+      start(g, p)
     });
 
     socket.on('leave', (v) => {
@@ -252,6 +260,7 @@ io.on('connection', (socket) => {
         return;
 
       g.playerCount--;
+      g.op = "";
       remove(g.players, p);
       remove(g.playerNames, p.username);
       var lo = {gameName: g.gameName, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
