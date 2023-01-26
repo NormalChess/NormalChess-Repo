@@ -113,14 +113,19 @@ function start(g, p)
 
   g.board = new chess.Board();
 
-  var lo = {gameName: g.gameName, op: g.op, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
+  var lo = {gameName: g.gameName, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
 
   
   var white = getRandomInt(2);
   g.players[white].isWhite = true;
-    
+  var i = 0;
     g.players.forEach(pp => {
+      if (i == 0)
+        lo.op = lo.players[1];
+      else
+        lo.op = lo.players[0];
       pp.socket.emit("start", {board: g.board, lobby: lo});
+      i++;
     });
 }
 
