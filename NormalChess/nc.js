@@ -4,7 +4,6 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
 
-
 function move(divId, amt, t) {
     var elements = document.getElementById(divId).children;
     for (var i = 0; i < elements.length; i++) {
@@ -13,9 +12,9 @@ function move(divId, amt, t) {
     }
   }
 
-move("lobbies", 100, 0.01);
-move("lobby", 100, 0.01);
-move("game", 100, 0.01);
+move("lobbies", 120, 0.01);
+move("lobby", 220, 0.01);
+move("game", 320, 0.01);
 
 var form = document.getElementById('form');
 var form2 = document.getElementById('lobbyForm');
@@ -69,6 +68,13 @@ socket.on("error", function(v) {
   console.warn("[Normal Chess] " + v);
 });
 
+socket.on("nick", function(v) {
+  move("nickname", 0, 1);
+  move("lobby", 120, 1);
+  move("game", 120, 1);
+  move("lobbies", 120, 1);
+});
+
 socket.on("lobbies", function(v) {
     var lobbies = v["list"];
     username = v["username"];
@@ -101,6 +107,22 @@ socket.on("lobbies", function(v) {
     
 });
 
+let bb = document.getElementById("startButton");
+bb.addEventListener("click", function() {
+  socket.emit("start", gameId);
+});
+
+
+let b = document.getElementById("leaveButton");
+b.addEventListener("click", function() {
+    socket.emit("leave", gameId);
+});
+
+let bbb = document.getElementById("resign");
+b.addEventListener("click", function() {
+    socket.emit("resign", gameId);
+});
+
 socket.on("lobby", function(v) {
     var game = v["lobby"];
     gameId = game.gameId;
@@ -120,20 +142,10 @@ socket.on("lobby", function(v) {
         list.innerHTML += "<h3>" + p + "</h3>";
     });
 
-    if (game.isHost)
-    {
-        list.innerHTML += "<button id='startButton'>Start</button>";
-        let bb = document.getElementById("startButton");
-        bb.addEventListener("click", function() {
-            socket.emit("startButton", game.gameId);
-        });
-    }
-    list.innerHTML += "<button id='leaveButton'>Leave</button>";
-    let b = document.getElementById("leaveButton");
-    b.addEventListener("click", function() {
-        list.innerHTML = "";
-        socket.emit("leave", game.gameId);
-    });
+    if (!game.isHost)
+      bb.disabled = true;
+    else
+      bb.disabled = false;
 });
 
 socket.on("start", function(v) {
@@ -143,9 +155,30 @@ socket.on("start", function(v) {
   move("game", 0, 1);
   move("lobby", 120, 1);
 
-});
-let b = document.getElementById("resign");
-b.addEventListener("click", function() {
-  list.innerHTML = "";
-  socket.emit("resign", game.gameId);
+  // Get the div element where the chessboard will be placed
+  var chessboard = document.getElementById("chess");
+
+  chessboard.innerHTML = "";
+
+  // Create 8 rows and 8 cells for each row
+  for (var i = 0; i < 8; i++) {
+      for (var j = 0; j < 8; j++) {
+          var cell = chessboard.appendChild(document.createElement("div"));
+          cell.style.width = "12.5%";
+          cell.style.float = "left";
+          cell.style.paddingBottom = "12.5%";
+          cell.style.boxSizing = "border-box";
+
+          // Alternate between green and white colors
+          if ((i + j) % 2 === 0) {
+              cell.style.backgroundColor = "green";
+          } else {
+              cell.style.backgroundColor = "white";
+          }
+
+          // Add the cell to the chessboard div
+          chessboard.appendChild(cell);
+      }
+  }
+
 });
