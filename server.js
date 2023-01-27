@@ -6,7 +6,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-
+const fs = require('fs')
 const nc = require("./node/normalChess")
 const chess = require("./Chess")
 
@@ -105,6 +105,17 @@ app.use((req, res, next) => {
       res.sendFile(__dirname + "/art/ncBg.png");
       break;
     default:
+      if (req.path.startsWith("/art/"))
+      {
+        // this is bad I think
+
+        var f = __dirname + "/art/pieces/" + req.path.split('/')[2] + ".svg";
+        if (fs.existsSync(f))
+          res.sendFile(f);
+        else
+          res.status(404).send("<html><head><title>Normal Chess</title></head><body><h1>404</h1><h2>I cannot find that file</h2><p>Go back... <a href='./index.html'>maybe</a>?</p></body></html>");
+        break;
+      }
       res.status(404).send("<html><head><title>Normal Chess</title></head><body><h1>404</h1><h2>I cannot find that file</h2><p>Go back... <a href='./index.html'>maybe</a>?</p></body></html>");
       break;
   }
@@ -127,7 +138,7 @@ function start(g, p)
         lo.op = lo.players[1];
       else
         lo.op = lo.players[0];
-      pp.socket.emit("start", {board: g.board, lobby: lo});
+      pp.socket.emit("start", {board: g.board, isWhite: pp.isWhite, lobby: lo});
       i++;
     });
 }

@@ -55,6 +55,18 @@ function typeToPiece(t, c)
   }
 }
 
+function setSVG(pos, type)
+{
+  var bruh = getFile(pos[0]) + (pos[1] + 1);
+
+  var cell = document.getElementById(bruh);
+  console.log(cell);
+  if (type != -1)
+    cell.style.background = "url(/art/" + typeToPiece(type) + ");";
+  else
+    cell.style.background = "";
+}
+
 function move(divId, amt, t) {
     var elements = document.getElementById(divId).children;
     for (var i = 0; i < elements.length; i++) {
@@ -230,7 +242,12 @@ socket.on("start", function(v) {
           cell.style.width = "calc(100% / 8)";
           cell.style.float = "left";
           cell.style.boxSizing = "border-box";
-          cell.id = getFile(i) + (j + 1).toString();
+
+          var s =  (8 - i);
+          if (v["isWhite"])
+            s = i + 1;
+
+          cell.id = getFile(j) + s.toString();
   
           // Alternate between green and white colors
           if ((i + j) % 2 === 0) {
@@ -239,10 +256,17 @@ socket.on("start", function(v) {
               cell.style.backgroundColor = "#eeeed2";
           }
   
+          cell.style.backgroundRepeat = "no-repeat";
+
           // Add the cell to the chessboard div
           chessboard.appendChild(cell);
       }
   }
+
+  board.pieces.forEach(piece => {
+    console.log(piece);
+    setSVG(piece.pos, piece.type);
+  });
 
   chessboard.style.display = "flex";
   chessboard.style.flexWrap = "wrap";

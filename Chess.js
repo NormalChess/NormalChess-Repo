@@ -43,7 +43,7 @@ class Move {
                     var c = m.capture;
                     var f = this.getFile(m.x);
                     var lf = this.getFile(m.lX);
-                    var t = f + m.y.toString();
+                    var t = f + (8 - m).y.toString();
                     if (c)
                     {
                         if (type != 1) // pawn has a different notation
@@ -104,7 +104,7 @@ class Piece {
     pos = [0,0];
     lastPos = [0,0];
     move = null;
-    constructor(_type, _pos, _c)
+    constructor(_pos, _type, _c)
     {
         this.color = _c;
         this.type = _type;
