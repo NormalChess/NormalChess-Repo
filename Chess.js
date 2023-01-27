@@ -133,27 +133,27 @@ class Board {
     constructor()
     {
         // P1
-        this.pieces.push(new Piece([0,0], 3, 0));
-        this.pieces.push(new Piece([1,0], 2, 0));
-        this.pieces.push(new Piece([2,0], 1, 0));
-        this.pieces.push(new Piece([3,0], 4, 0));
-        this.pieces.push(new Piece([4,0], 5, 0));
-        this.pieces.push(new Piece([5,0], 1, 0));
-        this.pieces.push(new Piece([6,0], 2, 0));
-        this.pieces.push(new Piece([7,0], 3, 0));
+        this.pieces.push(new Piece([0,0], 4, 0));
+        this.pieces.push(new Piece([1,0], 3, 0));
+        this.pieces.push(new Piece([2,0], 2, 0));
+        this.pieces.push(new Piece([3,0], 5, 0));
+        this.pieces.push(new Piece([4,0], 6, 0));
+        this.pieces.push(new Piece([5,0], 2, 0));
+        this.pieces.push(new Piece([6,0], 3, 0));
+        this.pieces.push(new Piece([7,0], 4, 0));
         for(var i = 0; i < 8; i++)
         {
             this.pieces.push(new Piece([i,1], 1, 0));
         }
         // P2
-        this.pieces.push(new Piece([0,7], 3, 1));
-        this.pieces.push(new Piece([1,7], 2, 1));
-        this.pieces.push(new Piece([2,7], 1, 1));
-        this.pieces.push(new Piece([3,7], 4, 1));
-        this.pieces.push(new Piece([4,7], 5, 1));
-        this.pieces.push(new Piece([5,7], 1, 1));
-        this.pieces.push(new Piece([6,7], 2, 1));
-        this.pieces.push(new Piece([7,7], 3, 1));
+        this.pieces.push(new Piece([0,7], 4, 1));
+        this.pieces.push(new Piece([1,7], 3, 1));
+        this.pieces.push(new Piece([2,7], 2, 1));
+        this.pieces.push(new Piece([3,7], 5, 1));
+        this.pieces.push(new Piece([4,7], 6, 1));
+        this.pieces.push(new Piece([5,7], 2, 1));
+        this.pieces.push(new Piece([6,7], 3, 1));
+        this.pieces.push(new Piece([7,7], 4, 1));
         for(var i = 0; i < 8; i++)
         {
             this.pieces.push(new Piece([i,6], 1, 1));

@@ -38,33 +38,36 @@ function getFile(pos)
 
 function typeToPiece(t, c)
 {
+  var color = c == 1 ? "b" : "w";
   switch(t)
   {
     case 1:
-      return c + "Pawn";
+      return color + "Pawn";
     case 2:
-      return c + "Bishop";
+      return color + "Bishop";
     case 3:
-      return c + "Knight";
+      return color + "Knight";
     case 4:
-      return c + "Rook";
+      return color + "Rook";
     case 5:
-      return c + "Queen";
+      return color + "Queen";
     case 6:
-      return c + "King";
+      return color + "King";
   }
 }
 
-function setSVG(pos, type)
+function setSVG(pos, type, color)
 {
-  var bruh = getFile(pos[0]) + (pos[1] + 1);
+  var id = getFile(pos[0]) + (pos[1] + 1);
 
-  var cell = document.getElementById(bruh);
-  console.log(cell);
+  var c = document.getElementById(id);
   if (type != -1)
-    cell.style.background = "url(/art/" + typeToPiece(type) + ");";
+  {
+    var t = '/art/' + typeToPiece(type, color) + '.svg';
+    c.innerHTML = "<img src='" + t + "' style='background-size: cover;background-position: center;width: 100%;height: 100%;'></img>"
+  }
   else
-    cell.style.background = "";
+    c.innerHTML = "";
 }
 
 function move(divId, amt, t) {
@@ -241,7 +244,6 @@ socket.on("start", function(v) {
           cell.style.height = "calc(100% / 8)";
           cell.style.width = "calc(100% / 8)";
           cell.style.float = "left";
-          cell.style.boxSizing = "border-box";
 
           var s =  (8 - i);
           if (v["isWhite"])
@@ -257,15 +259,17 @@ socket.on("start", function(v) {
           }
   
           cell.style.backgroundRepeat = "no-repeat";
-
+          cell.style.display = "flex";
+          cell.style.flexWrap = "wrap";
+          cell.style.alignItems = "center";
+          cell.style.justifyContent = "center";
           // Add the cell to the chessboard div
           chessboard.appendChild(cell);
       }
   }
 
   board.pieces.forEach(piece => {
-    console.log(piece);
-    setSVG(piece.pos, piece.type);
+    setSVG(piece.pos, piece.type, piece.color);
   });
 
   chessboard.style.display = "flex";

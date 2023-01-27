@@ -109,7 +109,7 @@ app.use((req, res, next) => {
       {
         // this is bad I think
 
-        var f = __dirname + "/art/pieces/" + req.path.split('/')[2] + ".svg";
+        var f = __dirname + "/art/pieces/" + req.path.split('/')[2];
         if (fs.existsSync(f))
           res.sendFile(f);
         else
