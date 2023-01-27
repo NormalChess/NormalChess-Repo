@@ -101,6 +101,9 @@ app.use((req, res, next) => {
     case "/chess.js":
       res.sendFile(__dirname + "/Chess.js");
       break;
+    case "/art/bg":
+      res.sendFile(__dirname + "/art/ncBg.png");
+      break;
     default:
       res.status(404).send("<html><head><title>Normal Chess</title></head><body><h1>404</h1><h2>I cannot find that file</h2><p>Go back... <a href='./index.html'>maybe</a>?</p></body></html>");
       break;

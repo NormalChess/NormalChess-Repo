@@ -69,10 +69,10 @@ socket.on("error", function(v) {
 });
 
 socket.on("nick", function(v) {
-  move("nickname", 0, 1);
-  move("lobby", 120, 1);
-  move("game", 120, 1);
-  move("lobbies", 120, 1);
+  move("nickname", 0, 0.01);
+  move("lobby", 120, 0.01);
+  move("game", 120, 0.01);
+  move("lobbies", 120, 0.01);
 });
 
 socket.on("lobbies", function(v) {
