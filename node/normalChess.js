@@ -26,6 +26,7 @@ class Player {
     ip = "";
     username = "";
     inLobby = false;
+    lookingForLobby = false;
     constructor(ip)
     {
         this.ip = ip;

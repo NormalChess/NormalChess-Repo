@@ -3,6 +3,57 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
+function getFile(pos)
+{
+    var file = "";
+    switch(pos)
+    {
+        case 0:
+            file = "a";
+            break;
+        case 1:
+            file = "b";
+            break;
+        case 2:
+            file = "c";
+            break;
+        case 3:
+            file = "d";
+            break;
+        case 4:
+            file = "e";
+            break;
+        case 5:
+            file = "f";
+            break;
+        case 6:
+            file = "g";
+            break;
+        case 7:
+            file = "h";
+            break;
+    }
+    return file;
+}
+
+function typeToPiece(t, c)
+{
+  switch(t)
+  {
+    case 1:
+      return c + "Pawn";
+    case 2:
+      return c + "Bishop";
+    case 3:
+      return c + "Knight";
+    case 4:
+      return c + "Rook";
+    case 5:
+      return c + "Queen";
+    case 6:
+      return c + "King";
+  }
+}
 
 function move(divId, amt, t) {
     var elements = document.getElementById(divId).children;
@@ -179,6 +230,7 @@ socket.on("start", function(v) {
           cell.style.width = "calc(100% / 8)";
           cell.style.float = "left";
           cell.style.boxSizing = "border-box";
+          cell.id = getFile(i) + (j + 1).toString();
   
           // Alternate between green and white colors
           if ((i + j) % 2 === 0) {

@@ -161,6 +161,7 @@ io.on('connection', (socket) => {
               });
               v.playerCount--;
               v.players.forEach(pp => {
+                pp.lookingForLobby = false;
                 pp.socket.emit('lobby', {lobby: {isHost: pp.ip == v.host.ip && v.host.username == p.username, gameName: v.gameName, link: "http://normalchess.com/?challenge=" + v.gameId, gameId: v.gameId, playerCount: v.playerCount, players: v.playerNames}});
               });
             }
@@ -169,7 +170,12 @@ io.on('connection', (socket) => {
         if (shouldDelete)
         {
             remove(lobbies, v);
+            players.forEach(pp => {
+              if (pp.lookingForLobby)
+                showLobbies(pp.socket, pp);
+            });
             v.players.forEach(pp => {
+              pp.lookingForLobby = true;
               pp.inLobby = false;
               showLobbies(pp.socket, pp);
             });
@@ -185,7 +191,7 @@ io.on('connection', (socket) => {
           n = n.substring(0,16);
         p.username = n.replace(/<[^>]*>?/gm, '');
         console.log(p.username + ' is now playing!');
-
+        p.lookingForLobby = true;
         if (v.id.length == 0)
           showLobbies(socket, p);
         else
@@ -228,6 +234,7 @@ io.on('connection', (socket) => {
         
         g.players.push(p);
         g.playerNames.push(p.username);
+        p.lookingForLobby = false;
 
         g.players.forEach(pp => {
           lo.isHost = pp.ip == g.host.ip && g.host.username == pp.username
@@ -266,7 +273,7 @@ io.on('connection', (socket) => {
       var g = getLobby(v);
       if (g == null)
         return;
-
+      p.lookingForLobby = true;
       g.playerCount--;
       g.op = "";
       remove(g.players, p);
@@ -287,6 +294,10 @@ io.on('connection', (socket) => {
       else
       {
         remove(lobbies, g);
+        players.forEach(pp => {
+          if (pp.lookingForLobby)
+            showLobbies(pp.socket, pp);
+        });
       }
       showLobbies(p.socket, p);
   });
@@ -305,11 +316,15 @@ io.on('connection', (socket) => {
         g.isPrivate = v["isPrivate"];
         g.playerNames.push(p.username);
         g.players.push(p);
-
+        p.lookingForLobby = false;
         console.log("Created " + g.gameName + " by " + p.username + ". Private: " + g.isPrivate);
 
         lobbies.push(g);
         socket.emit('lobby', {lobby: {isHost: true, link: "http://normalchess.com/?challenge=" + g.gameId, gameName: g.gameName, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames}});
+        players.forEach(pp => {
+          if (pp.lookingForLobby)
+            showLobbies(pp.socket, pp);
+        });
     });
 });
 
