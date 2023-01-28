@@ -56,6 +56,34 @@ function typeToPiece(t, c)
   }
 }
 
+var posX;
+var posY;
+var dragged;
+var def = false;
+function drop() {
+  document.removeEventListener("mousemove", mMove, false);
+  document.removeEventListener("mouseup", drop, false);
+  dragged.style.left = "";
+  dragged.style.top = "";
+  dragged.style.zIndex = "";
+  def = false;
+}    
+
+function mMove(event) {
+
+  if (!def)
+  {
+      posX = event.x;
+      posY = event.y;
+      document.addEventListener("mouseup", drop, false);
+      def = true;
+  }
+  dragged.style.zIndex = "99";
+  dragged.style.left = ((event.clientX - posX)).toString() + "px";
+  dragged.style.top = ((event.clientY - posY) + (dragged.clientHeight / 2)).toString() + "px";
+}    
+
+
 function setSVG(pos, type, color)
 {
   var id = getFile(pos[0]) + (pos[1] + 1);
@@ -64,7 +92,13 @@ function setSVG(pos, type, color)
   if (type != -1)
   {
     var t = '/art/' + typeToPiece(type, color) + '.svg';
-    c.innerHTML = "<img src='" + t + "' style='background-size: cover;background-position: center;width: 100%;height: 100%;'></img>"
+    c.innerHTML = "<img id='" + id + "Drag'src='" + t + "' style='user-select: none;position: relative; background-size: cover;background-position: center;width: 100%;height: 100%;'></img>";
+    var img = document.getElementById(id + "Drag");
+    img.draggable = false;
+    img.addEventListener("mousedown", function(e) {
+      dragged = img;
+      document.addEventListener("mousemove", mMove, false);
+    }, false);
   }
   else
     c.innerHTML = "";
@@ -248,8 +282,8 @@ socket.on("start", function(v) {
           var s =  (8 - i);
           if (v["isWhite"])
             s = i + 1;
-
-          cell.id = getFile(j) + s.toString();
+          
+          cell.id = getFile(j) + s;
   
           // Alternate between green and white colors
           if ((i + j) % 2 === 0) {
