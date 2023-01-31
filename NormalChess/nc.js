@@ -114,23 +114,32 @@ function getAvaliableMoves(b, p)
             case 3: // knight
                 // too lazy to look for a cleaner solution
                 var x1 = [p.pos[0] - 1, p.pos[1] + 2];
+                x1.push(getPieceAt(b, x1) != null);
                 var x2 = [p.pos[0] - 2, p.pos[1] + 1];
-                m.push(x1, getPieceAt(b, x1) != null);
-                m.push(x2, getPieceAt(b, x2) != null);
+                x2.push(getPieceAt(b, x2) != null);
+                m.push(x1);
+                m.push(x2);
                 x1 = [p.pos[0] + 1, p.pos[1] + 2];
+                x1.push(getPieceAt(b, x1) != null);
                 x2 = [p.pos[0] + 2, p.pos[1] + 1];
-                m.push(x1, getPieceAt(b, x1) != null);
-                m.push(x2, getPieceAt(b, x2) != null);
+                x2.push(getPieceAt(b, x2) != null);
+                m.push(x1);
+                m.push(x2);
                 x1 = [p.pos[0] - 1, p.pos[1] - 2];
+                x1.push(getPieceAt(b, x1) != null);
                 x2 = [p.pos[0] - 2, p.pos[1] - 1];
-                m.push(x1, getPieceAt(b, x1) != null);
-                m.push(x2, getPieceAt(b, x2) != null);
+                x2.push(getPieceAt(b, x2) != null);
+                m.push(x1);
+                m.push(x2);
                 x1 = [p.pos[0] + 1, p.pos[1] - 2];
+                x1.push(getPieceAt(b, x1) != null);
                 x2 = [p.pos[0] + 2, p.pos[1] - 1];
-                m.push(x1, getPieceAt(b, x1) != null);
-                m.push(x2, getPieceAt(b, x2) != null);
+                x2.push(getPieceAt(b, x2) != null);
+                m.push(x1);
+                m.push(x2);
                 break;
         }
+        
         return m;
     }
 
@@ -308,6 +317,9 @@ function setMoves(b, piece)
   var stateWithMoves = [...state];
   for (var i = 0; i < moves.length; i++) {
     var m = moves[i];
+    if (m[0] < 0 || m[0] > 7 || m[1] < 0 || m[1] > 7)
+      continue;
+
     var id = getFile(m[0]) + (m[1] + 1);
     var p = getPieceAt(b, [m[0], m[1]]);
     if (p != null && !m[2])
