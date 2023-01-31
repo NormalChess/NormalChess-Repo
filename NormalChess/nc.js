@@ -3,6 +3,30 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
+// Store username
+var username = "";
+
+// Store current gameId
+var gameId = "";
+
+if (urlParams.get('challenge') != null)
+  gameId = urlParams.get('challenge');
+
+// Store the current board
+var board = null;
+
+// Create a socket.io object
+var socket = io();
+
+function getPieceAt(board, pos)
+{
+    var p = board.pieces.filter(obj => {
+        var v = obj.pos[0] == pos[0] && obj.pos[1] == pos[1];
+        return v;
+      })[0];
+    return p;
+}
+
 function getFile(pos)
 {
     var file = "";
@@ -66,12 +90,30 @@ var playable = [];
 
 function clearBasedOn(array)
 {
-
+  for (var i = 0; i < 8; i++) {
+    for (var j = 0; j < 8; j++) {
+      var id = getFile(j) + (i + 1);
+      if (array.includes(id))
+      {
+        var el = document.getElementById(id);
+        el.innerHTML = "";
+      }
+    }
+  }
 }
 
 function inverseClearBasedOn(array)
 {
-  
+  for (var i = 0; i < 8; i++) {
+    for (var j = 0; j < 8; j++) {
+      var id = getFile(j) + (i + 1);
+      if (!array.includes(id))
+      {
+        var el = document.getElementById(id);
+        el.innerHTML = "";
+      }
+    }
+  }
 }
 
 function drop() {
@@ -94,8 +136,8 @@ function mMove(event) {
       def = true;
   }
   dragged.style.zIndex = "99";
-  dragged.style.left = ((event.clientX - posX)).toString() + "px";
-  dragged.style.top = ((event.clientY - posY) + (dragged.clientHeight / 2)).toString() + "px";
+  dragged.style.left = ((event.clientX - posX)) + "px";
+  dragged.style.top = ((event.clientY - posY) + (dragged.clientHeight / 2)) + "px";
 }    
 
 
@@ -135,15 +177,22 @@ function move(divId, amt, t) {
 
 function setPieces(b)
 {
+  var ar = [];
   for (var i = 0; i < 8; i++) {
     for (var j = 0; j < 8; j++) {
-      var p = b.getPieceAt([j,i]);
+      var p = getPieceAt(b, [j,i]);
+
       if (p != null)
-        setSVG(p.pos, p.type, p.color);
+      {
+        setSVG([j,i], p.type, p.color);
+        var f = getFile(j) + (i + 1).toString();
+        ar.push(f);
+      }
       else
         setSVG([j,i],-1, 0);
     }
   }
+  return ar;
 }
 
 function setMoves(b, piece)
@@ -173,21 +222,6 @@ move("game", 320, 0.01);
 var form = document.getElementById('form');
 var form2 = document.getElementById('lobbyForm');
 
-
-// Store username
-var username = "";
-
-// Store current gameId
-var gameId = "";
-
-if (urlParams.get('challenge') != null)
-  gameId = urlParams.get('challenge');
-
-// Store the current board
-var board = null;
-
-// Create a socket.io object
-var socket = io();
 
 form.addEventListener('submit', function(e) {
   let textbox = document.getElementById("textbox");
@@ -356,7 +390,8 @@ socket.on("start", function(v) {
       }
   }
   svg = [];
-  setPieces(board);
+  var state = setPieces(board);
+  inverseClearBasedOn(state);
 
   chessboard.style.display = "flex";
   chessboard.style.flexWrap = "wrap";
