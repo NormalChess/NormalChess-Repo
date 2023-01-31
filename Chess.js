@@ -99,6 +99,7 @@ class Move {
 
 class Piece {
     svgId = "";
+    moveLifetime = 0;
     color = 0;
     type = 0;
     pos = [0,0];
@@ -124,6 +125,92 @@ class Board {
     pieces = [];
 
     white = true;
+
+    getPieceAt(pos)
+    {
+        var p = board.pieces.filter(obj => {
+            return obj.pos == pos;
+          })[0];
+        return p;
+    }
+
+    getAvaliableMoves(p)
+    {
+        var m = [];
+        switch(p.type)
+        {
+            case 1: // pawn
+                if (p.moveLifetime == 0)
+                {
+                    if (p.color == 0)
+                    {
+                        m.push([p.pos[0],p.pos[1] + 1, false]);
+                        m.push([p.pos[0],p.pos[1] + 2, false]);
+                    }
+                    else
+                    {
+                        m.push([p.pos[0],p.pos[1] - 1, false]);
+                        m.push([p.pos[0],p.pos[1] - 2, false]);
+                    }
+                }
+                else
+                {
+                    if (p.color == 0)
+                        m.push([p.pos[0],p.pos[1] + 1, false]);
+                    else
+                        m.push([p.pos[0],p.pos[1] - 1, false]);
+                }
+                if (p.color == 0)
+                {
+                    if (this.getPieceAt([p.pos[0] - 1, p.pos[1] + 1]) != null)
+                        m.push([p.pos[0] - 1,p.pos[1] + 1], true);
+                    if (this.getPieceAt([p.pos[0] + 1, p.pos[1] + 1]) != null)
+                        m.push([p.pos[0] + 1,p.pos[1] + 1], true);
+                }
+                else
+                {
+                    if (this.getPieceAt([p.pos[0] - 1, p.pos[1] - 1]) != null)
+                        m.push([p.pos[0] - 1,p.pos[1] - 1], true);
+                    if (this.getPieceAt([p.pos[0] + 1, p.pos[1] - 1]) != null)
+                        m.push([p.pos[0] + 1,p.pos[1] - 1], true);
+                }
+
+            break;
+            case 2: // bishop
+                var found = [false, false, false, false];
+                for (var i = 0; i < 8; i++) {
+                    var x1 = [p.pos[0] - i,p.pos[1] - i];
+                    var x2 = [p.pos[0] + i,p.pos[1] + i];
+                    var x3 = [p.pos[0] - i,p.pos[1] + i];
+                    var x4 = [p.pos[0] + i,p.pos[1] - i];
+                    if (!found[0])
+                    {
+                        var take = this.getPieceAt(x1) != null;
+                        found[0] = take;
+                        m.push(x1, take);
+                    }
+                    if (!found[1])
+                    {
+                        var take = this.getPieceAt(x2) != null;
+                        found[1] = take;
+                        m.push(x2, take);
+                    }
+                    if (!found[2])
+                    {
+                        var take = this.getPieceAt(x3) != null;
+                        found[2] = take;
+                        m.push(x3, take);
+                    }
+                    if (!found[3])
+                    {
+                        var take = this.getPieceAt(x4) != null;
+                        found[3] = take;
+                        m.push(x4, take);
+                    }
+                }
+                break;
+        }
+    }
 
     makeMove()
     {

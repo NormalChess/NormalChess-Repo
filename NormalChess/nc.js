@@ -60,12 +60,27 @@ var posX;
 var posY;
 var dragged;
 var def = false;
+var selectedPiece = null;
+var svgd = [];
+var playable = [];
+
+function clearBasedOn(array)
+{
+
+}
+
+function inverseClearBasedOn(array)
+{
+  
+}
+
 function drop() {
   document.removeEventListener("mousemove", mMove, false);
   document.removeEventListener("mouseup", drop, false);
   dragged.style.left = "";
   dragged.style.top = "";
   dragged.style.zIndex = "";
+  selectedPiece = null;
   def = false;
 }    
 
@@ -97,7 +112,13 @@ function setSVG(pos, type, color)
     img.draggable = false;
     img.addEventListener("mousedown", function(e) {
       dragged = img;
+      var p = board.pieces.filter(obj => {
+        return obj.pos == pos;
+      })[0];
+      playable = [];
+      selectedPiece = p;
       document.addEventListener("mousemove", mMove, false);
+      setMoves(board, selectedPiece);
     }, false);
   }
   else
@@ -111,6 +132,39 @@ function move(divId, amt, t) {
       elements[i].style.transform = "translateY(" + amt.toString() + "%)";
     }
   }
+
+function setPieces(b)
+{
+  for (var i = 0; i < 8; i++) {
+    for (var j = 0; j < 8; j++) {
+      var p = b.getPieceAt([j,i]);
+      if (p != null)
+        setSVG(p.pos, p.type, p.color);
+      else
+        setSVG([j,i],-1, 0);
+    }
+  }
+}
+
+function setMoves(b, piece)
+{
+  var moves = b.getAvaliableMoves(piece);
+  console.log(moves);
+  moves.forEach(m => {
+    var id = getFile(m[0]) + (m[1] + 1);
+
+    var c = document.getElementById(id);
+    if (m[2])
+      c.style.backgroundColor = "lightred";
+    else
+    {
+      var t = '/art/playable.svg';
+      c.innerHTML = "<img id='" + id + "Move'src='" + t + "' style='user-select: none;position: relative; background-size: cover;background-position: center;width: 100%;height: 100%;'></img>";
+      var img = document.getElementById(id + "Move");
+      img.draggable = false;
+    }
+  });
+}
 
 move("lobbies", 120, 0.01);
 move("lobby", 220, 0.01);
@@ -301,10 +355,8 @@ socket.on("start", function(v) {
           chessboard.appendChild(cell);
       }
   }
-
-  board.pieces.forEach(piece => {
-    setSVG(piece.pos, piece.type, piece.color);
-  });
+  svg = [];
+  setPieces(board);
 
   chessboard.style.display = "flex";
   chessboard.style.flexWrap = "wrap";

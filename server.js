@@ -12,18 +12,6 @@ const chess = require("./Chess")
 
 // Helper Functions
 
-const generateRandomString = (myLength) => {
-  const chars =
-    "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890";
-  const randomArray = Array.from(
-    { length: myLength },
-    (v, k) => chars[Math.floor(Math.random() * chars.length)]
-  );
-
-  const randomString = randomArray.join("");
-  return randomString;
-};
-
 function remove(arr, value) {
   var index = arr.indexOf(value);
   if (index > -1) {
@@ -127,7 +115,7 @@ function start(g, p)
 
   g.board = new chess.Board();
 
-  var lo = {gameName: g.gameName, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
+  var lo = {gameName: g.gameName, link: "https://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
 
   
   var white = getRandomInt(2);
@@ -217,7 +205,7 @@ io.on('connection', (socket) => {
           p.isWhite = false;
           p.inLobby = true;
           g.playerCount++;
-          var lo = {gameName: g.gameName, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
+          var lo = {gameName: g.gameName, link: "https://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
           
           g.players.push(p);
           g.playerNames.push(p.username);
@@ -241,7 +229,7 @@ io.on('connection', (socket) => {
         p.inLobby = true;
         g.op = p.username;
         g.playerCount++;
-        var lo = {gameName: g.gameName, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
+        var lo = {gameName: g.gameName, link: "https://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
         
         g.players.push(p);
         g.playerNames.push(p.username);
@@ -289,7 +277,7 @@ io.on('connection', (socket) => {
       g.op = "";
       remove(g.players, p);
       remove(g.playerNames, p.username);
-      var lo = {gameName: g.gameName, link: "http://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
+      var lo = {gameName: g.gameName, link: "https://normalchess.com/?challenge=" + g.gameId, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames};
       
       console.log(p.username + " left " + g.gameName + ". Players left: " + g.players.length.toString());
       p.inLobby = false;
@@ -331,7 +319,7 @@ io.on('connection', (socket) => {
         console.log("Created " + g.gameName + " by " + p.username + ". Private: " + g.isPrivate);
 
         lobbies.push(g);
-        socket.emit('lobby', {lobby: {isHost: true, link: "http://normalchess.com/?challenge=" + g.gameId, gameName: g.gameName, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames}});
+        socket.emit('lobby', {lobby: {isHost: true, link: "https://normalchess.com/?challenge=" + g.gameId, gameName: g.gameName, gameId: g.gameId, playerCount: g.playerCount, players: g.playerNames}});
         players.forEach(pp => {
           if (pp.lookingForLobby)
             showLobbies(pp.socket, pp);
