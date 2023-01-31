@@ -3,6 +3,9 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
+// Store board state
+var state = [];
+
 // Store username
 var username = "";
 
@@ -20,12 +23,116 @@ var socket = io();
 
 function getPieceAt(board, pos)
 {
-    var p = board.pieces.filter(obj => {
-        var v = obj.pos[0] == pos[0] && obj.pos[1] == pos[1];
-        return v;
-      })[0];
+    var p = null;
+    for(var i = 0; i < board.pieces.length; i++)
+    {
+      var fp = board.pieces[i];
+      if (fp.pos[0] == pos[0] && fp.pos[1] == pos[1])
+      {
+        p = fp;
+        break;
+      }
+    }
     return p;
 }
+
+function getAvaliableMoves(b, p)
+    {
+        var m = [];
+        switch(p.type)
+        {
+            case 1: // pawn
+                if (p.moveLifetime == 0)
+                {
+                    if (p.color == 0)
+                    {
+                        m.push([p.pos[0],p.pos[1] + 1, false]);
+                        m.push([p.pos[0],p.pos[1] + 2, false]);
+                    }
+                    else
+                    {
+                        m.push([p.pos[0],p.pos[1] - 1, false]);
+                        m.push([p.pos[0],p.pos[1] - 2, false]);
+                    }
+                }
+                else
+                {
+                    if (p.color == 0)
+                        m.push([p.pos[0],p.pos[1] + 1, false]);
+                    else
+                        m.push([p.pos[0],p.pos[1] - 1, false]);
+                }
+                if (p.color == 0)
+                {
+                    if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] + 1]) != null)
+                        m.push([p.pos[0] - 1,p.pos[1] + 1], true);
+                    if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] + 1]) != null)
+                        m.push([p.pos[0] + 1,p.pos[1] + 1], true);
+                }
+                else
+                {
+                    if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] - 1]) != null)
+                        m.push([p.pos[0] - 1,p.pos[1] - 1], true);
+                    if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] - 1]) != null)
+                        m.push([p.pos[0] + 1,p.pos[1] - 1], true);
+                }
+
+            break;
+            case 2: // bishop
+                var found = [false, false, false, false];
+                for (var i = 0; i < 8; i++) {
+                    var x1 = [p.pos[0] - i,p.pos[1] - i];
+                    var x2 = [p.pos[0] + i,p.pos[1] + i];
+                    var x3 = [p.pos[0] - i,p.pos[1] + i];
+                    var x4 = [p.pos[0] + i,p.pos[1] - i];
+                    if (!found[0])
+                    {
+                        var take = getPieceAt(b, x1) != null;
+                        found[0] = take;
+                        m.push(x1, take);
+                    }
+                    if (!found[1])
+                    {
+                        var take = getPieceAt(b, x2) != null;
+                        found[1] = take;
+                        m.push(x2, take);
+                    }
+                    if (!found[2])
+                    {
+                        var take = getPieceAt(b, x3) != null;
+                        found[2] = take;
+                        m.push(x3, take);
+                    }
+                    if (!found[3])
+                    {
+                        var take = getPieceAt(b, x4) != null;
+                        found[3] = take;
+                        m.push(x4, take);
+                    }
+                }
+                break;
+            case 3: // knight
+                // too lazy to look for a cleaner solution
+                var x1 = [p.pos[0] - 1, p.pos[1] + 2];
+                var x2 = [p.pos[0] - 2, p.pos[1] + 1];
+                m.push(x1, getPieceAt(b, x1) != null);
+                m.push(x2, getPieceAt(b, x2) != null);
+                x1 = [p.pos[0] + 1, p.pos[1] + 2];
+                x2 = [p.pos[0] + 2, p.pos[1] + 1];
+                m.push(x1, getPieceAt(b, x1) != null);
+                m.push(x2, getPieceAt(b, x2) != null);
+                x1 = [p.pos[0] - 1, p.pos[1] - 2];
+                x2 = [p.pos[0] - 2, p.pos[1] - 1];
+                m.push(x1, getPieceAt(b, x1) != null);
+                m.push(x2, getPieceAt(b, x2) != null);
+                x1 = [p.pos[0] + 1, p.pos[1] - 2];
+                x2 = [p.pos[0] + 2, p.pos[1] - 1];
+                m.push(x1, getPieceAt(b, x1) != null);
+                m.push(x2, getPieceAt(b, x2) != null);
+                break;
+        }
+        return m;
+    }
 
 function getFile(pos)
 {
@@ -124,24 +231,24 @@ function drop() {
   dragged.style.zIndex = "";
   selectedPiece = null;
   def = false;
+  inverseClearBasedOn(state);
 }    
 
 function mMove(event) {
 
   if (!def)
   {
-      posX = event.x;
-      posY = event.y;
-      document.addEventListener("mouseup", drop, false);
+      posX = event.clientX;
+      posY = event.clientY;
       def = true;
   }
   dragged.style.zIndex = "99";
   dragged.style.left = ((event.clientX - posX)) + "px";
-  dragged.style.top = ((event.clientY - posY) + (dragged.clientHeight / 2)) + "px";
+  dragged.style.top = ((event.clientY - posY) - (dragged.clientHeight / 3)) + "px";
 }    
 
 
-function setSVG(pos, type, color)
+function setSVG(pos, type, color, board)
 {
   var id = getFile(pos[0]) + (pos[1] + 1);
 
@@ -154,12 +261,11 @@ function setSVG(pos, type, color)
     img.draggable = false;
     img.addEventListener("mousedown", function(e) {
       dragged = img;
-      var p = board.pieces.filter(obj => {
-        return obj.pos == pos;
-      })[0];
+      var p = getPieceAt(board, pos);
       playable = [];
       selectedPiece = p;
       document.addEventListener("mousemove", mMove, false);
+      document.addEventListener("mouseup", drop, false);
       setMoves(board, selectedPiece);
     }, false);
   }
@@ -184,12 +290,12 @@ function setPieces(b)
 
       if (p != null)
       {
-        setSVG([j,i], p.type, p.color);
+        setSVG([j,i], p.type, p.color, b);
         var f = getFile(j) + (i + 1).toString();
         ar.push(f);
       }
       else
-        setSVG([j,i],-1, 0);
+        setSVG([j,i],-1, 0, b);
     }
   }
   return ar;
@@ -197,11 +303,16 @@ function setPieces(b)
 
 function setMoves(b, piece)
 {
-  var moves = b.getAvaliableMoves(piece);
+  var moves = getAvaliableMoves(b, piece);
   console.log(moves);
-  moves.forEach(m => {
+  var stateWithMoves = [...state];
+  for (var i = 0; i < moves.length; i++) {
+    var m = moves[i];
     var id = getFile(m[0]) + (m[1] + 1);
-
+    var p = getPieceAt(b, [m[0], m[1]]);
+    if (p != null && !m[2])
+        continue;
+    stateWithMoves.push(id);
     var c = document.getElementById(id);
     if (m[2])
       c.style.backgroundColor = "lightred";
@@ -212,7 +323,8 @@ function setMoves(b, piece)
       var img = document.getElementById(id + "Move");
       img.draggable = false;
     }
-  });
+  }
+  inverseClearBasedOn(stateWithMoves);
 }
 
 move("lobbies", 120, 0.01);
@@ -390,7 +502,7 @@ socket.on("start", function(v) {
       }
   }
   svg = [];
-  var state = setPieces(board);
+  state = setPieces(board);
   inverseClearBasedOn(state);
 
   chessboard.style.display = "flex";
