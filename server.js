@@ -8,7 +8,8 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const fs = require('fs')
 const nc = require("./node/normalChess")
-const chess = require("./Chess")
+const chess = require("./Chess");
+const { getgid } = require('process');
 
 // Helper Functions
 
@@ -160,6 +161,7 @@ io.on('connection', (socket) => {
               });
               v.playerCount--;
               v.players.forEach(pp => {
+                pp.socket.emit("error", p.username + " left");
                 pp.lookingForLobby = false;
                 pp.socket.emit('lobby', {lobby: {isHost: pp.ip == v.host.ip && v.host.username == p.username, gameName: v.gameName, link: "http://normalchess.com/?challenge=" + v.gameId, gameId: v.gameId, playerCount: v.playerCount, players: v.playerNames}});
               });
@@ -176,6 +178,7 @@ io.on('connection', (socket) => {
             v.players.forEach(pp => {
               pp.lookingForLobby = true;
               pp.inLobby = false;
+              pp.socket.emit("error", "left lobby due to the host leaving");
               showLobbies(pp.socket, pp);
             });
             return false;
@@ -188,7 +191,8 @@ io.on('connection', (socket) => {
         var n = v.name;
         if (n.length > 16)
           n = n.substring(0,16);
-        p.username = n.replace(/<[^>]*>?/gm, '');
+        if (n.length != 0)
+          p.username = n.replace(/<[^>]*>?/gm, '');
         console.log(p.username + ' is now playing!');
         p.lookingForLobby = true;
         if (v.id.length == 0)
@@ -211,6 +215,7 @@ io.on('connection', (socket) => {
           g.playerNames.push(p.username);
 
           g.players.forEach(pp => {
+            p.socket.emit("error", "joined through code");
             lo.isHost = pp.ip == g.host.ip && g.host.username == pp.username
             pp.socket.emit("lobby", {lobby: lo});
           });
@@ -223,7 +228,16 @@ io.on('connection', (socket) => {
           return;
         var g = getLobby(v);
         if (g == null)
+        {
+          p.socket.emit("error", "that game was not found");
           return;
+        }
+
+        if (g.playerCount > 1)
+        {
+          p.socket.emit("error", "that game is full");
+          return;
+        }
 
         p.isWhite = false;
         p.inLobby = true;
@@ -289,6 +303,9 @@ io.on('connection', (socket) => {
       var ppos = v["piecePos"];
       var newPos = v["newPos"];
       
+      if (ppos[0] == newPos[0] && ppos[1] == newPos[1])
+          return;
+
       var piece = g.board.getPieceAt(ppos);
 
       if (piece == null)
@@ -297,7 +314,9 @@ io.on('connection', (socket) => {
         return;
       }
    
-      var moves = g.board.getAvaliableMoves(piece);
+      var moves = g.board.getAvaliableMoves(piece, p.isWhite);
+
+      console.log(moves);
 
       var goodMove = false;
 
@@ -316,7 +335,15 @@ io.on('connection', (socket) => {
         return;
       }
 
+      g.board.makeMove(ppos, newPos);
+
       g.board.white = !g.board.white;
+
+      console.log("Sending " + g.board.moves);
+
+      g.players.forEach(pp => {
+        pp.socket.emit("move", g.board);
+      });
 
     });
 
@@ -343,7 +370,8 @@ io.on('connection', (socket) => {
         if (p.ip == g.host.ip && g.host.username == p.username)
           g.host = g.players[0];
         g.players.forEach(pp => {
-            lo.isHost = pp.ip == g.host.ip && g.host.username == pp.username
+            lo.isHost = pp.ip == g.host.ip && g.host.username == pp.username;
+            pp.socket.emit("error", p.username + " left. You've become the new host");
             pp.socket.emit("lobby", {lobby: lo});
         });
       }

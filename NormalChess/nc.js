@@ -84,6 +84,8 @@ function getPieceAt(board, pos, color = -1)
     return p;
 }
 
+var movePos = [];
+
 function getAvaliableMoves(b, p)
     {
         var m = [];
@@ -307,6 +309,22 @@ function mMove(event) {
   dragged.style.top = ((event.clientY - posY) - (dragged.clientHeight / 3)) + "px";
 }    
 
+function elementsOverlap(el1, el2) {
+  const domRect1 = el1.getBoundingClientRect();
+  const domRect2 = el2.getBoundingClientRect();
+
+  return !(
+    domRect1.top > domRect2.bottom ||
+    domRect1.right < domRect2.left ||
+    domRect1.bottom < domRect2.top ||
+    domRect1.left > domRect2.right
+  );
+}
+
+function movePiece(oldPos, newPos)
+{
+  socket.emit("move", {gameId: gameId, piecePos: oldPos, newPos: newPos});
+}
 
 function setSVG(pos, type, color, board)
 {
@@ -321,20 +339,35 @@ function setSVG(pos, type, color, board)
     c.innerHTML = "<img id='" + id + "Drag'src='" + t + "' style='user-select: none;position: relative; background-size: cover;background-position: center;width: 100%;height: 100%;'></img>";
     var img = document.getElementById(id + "Drag");
     img.draggable = false;
-    img.addEventListener("mousedown", function(e) {
-      dragged = img;
-      var p = getPieceAt(board, pos);
-      playable = [];
-      selectedPiece = p;
-      document.addEventListener("mousemove", mMove, false);
-      document.addEventListener("mouseup", () => {
-        c.style.backgroundColor = previousColor;
-        drop();
+    if ((myColor == 0 && board.white) || (myColor == 1 && !board.white))
+      img.addEventListener("mousedown", function(e) {
+        dragged = img;
+        var p = getPieceAt(board, pos);
+        playable = [];
+        selectedPiece = p;
+        document.addEventListener("mousemove", mMove, false);
+        document.addEventListener("mouseup", (e) => {
+          tile = [];
+          for(var i = 0; i < movePos.length; i++)
+          {
+            var m = movePos[i];
+            var el = document.getElementById(m[2]);
+            if (el != null)
+              if (elementsOverlap(img, el))
+              {
+                  tile = [m[0], m[1]];
+                  break;
+              }
+          }
+          if (tile.length != 0 && selectedPiece.pos != tile)
+            movePiece(selectedPiece.pos, tile);
+          c.style.backgroundColor = previousColor;
+          drop();
+        }, false);
+        tile = [pos[0],pos[1]];
+        c.style.backgroundColor = "#baca2b";
+        setMoves(board, selectedPiece);
       }, false);
-      tile = id;
-      c.style.backgroundColor = "#baca2b";
-      setMoves(board, selectedPiece);
-    }, false);
   }
   else
     c.innerHTML = "";
@@ -373,6 +406,7 @@ function setMoves(b, piece)
   var moves = getAvaliableMoves(b, piece);
   console.log(moves);
   var stateWithMoves = [...state];
+  movePos = [];
   for (var i = 0; i < moves.length; i++) {
     var m = moves[i];
     if (m[0] < 0 || m[0] > 7 || m[1] < 0 || m[1] > 7)
@@ -383,6 +417,7 @@ function setMoves(b, piece)
     if (p != null && !m[2])
         continue;
     stateWithMoves.push(id);
+    movePos.push([m[0],m[1], id + "Move"]);
     var c = document.getElementById(id);
     if (m[2])
       c.style.backgroundColor = "#ca2b2b";
@@ -552,9 +587,9 @@ socket.on("start", function(v) {
           cell.style.width = "calc(100% / 8)";
           cell.style.float = "left";
 
-          var s =  (8 - i);
+          var s = i + 1;
           if (v["isWhite"])
-            s = i + 1;
+            s = (8 - i);
           
           cell.id = getFile(j) + s;
   
@@ -571,7 +606,6 @@ socket.on("start", function(v) {
           cell.style.alignItems = "center";
           cell.style.justifyContent = "center";
           cell.style.accentColor = cell.style.backgroundColor;
-          var previousColor = cell.style.backgroundColor;
 
           // Add the cell to the chessboard div
           chessboard.appendChild(cell);
@@ -589,4 +623,12 @@ socket.on("start", function(v) {
   chessboard.style.maxWidth = "55%";
   chessboard.style.maxHeight = "70%";
 
+});
+
+socket.on("move", function(b) {
+  console.log("obtained move from server");
+  board = b;
+  svg = [];
+  state = setPieces(board);
+  inverseClearBasedOn(state);
 });

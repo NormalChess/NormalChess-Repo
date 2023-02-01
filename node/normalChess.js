@@ -47,11 +47,14 @@ class Lobby {
 
     containsPlayer(p)
     {
+        var b = false;
         this.players.forEach(pl => {
             if (pl.username == p.username && pl.ip == p.ip)
-                return true;
+            {
+                b = true;
+            }
         });
-        return false;
+        return b;
     }
 
     constructor(name)

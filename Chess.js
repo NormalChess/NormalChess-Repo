@@ -33,7 +33,7 @@ class Move {
         return file;
     }
 
-    static convertPieceToName(type, moveType, pos)
+    static convertPieceToName(type, moveType, from, pos)
     {
         switch(moveType)
         {
@@ -41,9 +41,9 @@ class Move {
                 var output = "";
                 pos.every(m => {
                     var c = m.capture;
-                    var f = this.getFile(m.x);
-                    var lf = this.getFile(m.lX);
-                    var t = f + (8 - m).y.toString();
+                    var f = Move.getFile(m);
+                    var lf = Move.getFile(from);
+                    var t = f + (m.y + 1);
                     if (c)
                     {
                         if (type != 1) // pawn has a different notation
@@ -90,9 +90,9 @@ class Move {
 
     mName = "";
     pos = [];
-    constructor(_pos,_type, _moveType, _capture)
+    constructor(_from, _pos,_type, _moveType, _capture)
     {
-        this.mName = convertPieceToName(_type, _moveType, _pos);
+        this.mName = Move.convertPieceToName(_type, _moveType, _from, _pos);
         this.pos = _pos;
     }
 }
@@ -110,13 +110,6 @@ class Piece {
         this.color = _c;
         this.type = _type;
         this.pos = _pos;
-    }
-
-    move(_pos, capture)
-    {
-        lastPos = pos;
-        pos = _pos;
-        return new Move(lastPos, pos, type, capture);
     }
 }
   
@@ -141,9 +134,10 @@ class Board {
         return p;
     }
 
-    getAvaliableMoves(p)
+    getAvaliableMoves(p, pColor = true)
     {
         var m = [];
+        var opColor = pColor ? 1 : 0;
         switch(p.type)
         {
             case 1: // pawn
@@ -169,16 +163,16 @@ class Board {
                 }
                 if (p.color == 0)
                 {
-                    if (this.getPieceAt([p.pos[0] - 1, p.pos[1] + 1]) != null)
+                    if (this.getPieceAt([p.pos[0] - 1, p.pos[1] + 1], opColor) != null)
                         m.push([p.pos[0] - 1,p.pos[1] + 1], true);
-                    if (this.getPieceAt([p.pos[0] + 1, p.pos[1] + 1]) != null)
+                    if (this.getPieceAt([p.pos[0] + 1, p.pos[1] + 1], opColor) != null)
                         m.push([p.pos[0] + 1,p.pos[1] + 1], true);
                 }
                 else
                 {
-                    if (this.getPieceAt([p.pos[0] - 1, p.pos[1] - 1]) != null)
+                    if (this.getPieceAt([p.pos[0] - 1, p.pos[1] - 1], opColor) != null)
                         m.push([p.pos[0] - 1,p.pos[1] - 1], true);
-                    if (this.getPieceAt([p.pos[0] + 1, p.pos[1] - 1]) != null)
+                    if (this.getPieceAt([p.pos[0] + 1, p.pos[1] - 1], opColor) != null)
                         m.push([p.pos[0] + 1,p.pos[1] - 1], true);
                 }
 
@@ -192,36 +186,80 @@ class Board {
                     var x4 = [p.pos[0] + i,p.pos[1] - i];
                     if (!found[0])
                     {
-                        var take = this.getPieceAt(x1) != null;
+                        var take = this.getPieceAt(x1, opColor) != null;
                         found[0] = take;
                         m.push(x1, take);
                     }
                     if (!found[1])
                     {
-                        var take = this.getPieceAt(x2) != null;
+                        var take = this.getPieceAt(x2, opColor) != null;
                         found[1] = take;
                         m.push(x2, take);
                     }
                     if (!found[2])
                     {
-                        var take = this.getPieceAt(x3) != null;
+                        var take = this.getPieceAt(x3, opColor) != null;
                         found[2] = take;
                         m.push(x3, take);
                     }
                     if (!found[3])
                     {
-                        var take = this.getPieceAt(x4) != null;
+                        var take = this.getPieceAt(x4, opColor) != null;
                         found[3] = take;
                         m.push(x4, take);
                     }
                 }
                 break;
+            case 3: // knight
+                // too lazy to look for a cleaner solution
+                var x1 = [p.pos[0] - 1, p.pos[1] + 2];
+                x1.push(this.getPieceAt(x1, opColor) != null);
+                var x2 = [p.pos[0] - 2, p.pos[1] + 1];
+                x2.push(this.getPieceAt(x2, opColor) != null);
+                m.push(x1);
+                m.push(x2);
+                x1 = [p.pos[0] + 1, p.pos[1] + 2];
+                x1.push(this.getPieceAt(x1, opColor) != null);
+                x2 = [p.pos[0] + 2, p.pos[1] + 1];
+                x2.push(this.getPieceAt(x2, opColor) != null);
+                m.push(x1);
+                m.push(x2);
+                x1 = [p.pos[0] - 1, p.pos[1] - 2];
+                x1.push(this.getPieceAt(x1, opColor) != null);
+                x2 = [p.pos[0] - 2, p.pos[1] - 1];
+                x2.push(this.getPieceAt(x2, opColor) != null);
+                m.push(x1);
+                m.push(x2);
+                x1 = [p.pos[0] + 1, p.pos[1] - 2];
+                x1.push(this.getPieceAt(x1, opColor) != null);
+                x2 = [p.pos[0] + 2, p.pos[1] - 1];
+                x2.push(this.getPieceAt(x2, opColor) != null);
+                m.push(x1);
+                m.push(x2);
+                break;
         }
+        
+        return m;
     }
 
-    makeMove()
+    removePiece(pos)
     {
+        pieces = pieces.filter(p => p.pos != pos);
+    }
 
+    makeMove(from, to)
+    {
+        var piece = this.getPieceAt(to);
+        var fpiece = this.getPieceAt(from);
+        var take = false;
+        if (piece != null)
+        {
+            take = true;
+            this.removePiece(to);
+        }
+
+        this.moves.push(new Move(from, to, fpiece.type, 0, take));
+        fpiece.pos = to;
     }
 
     constructor()
