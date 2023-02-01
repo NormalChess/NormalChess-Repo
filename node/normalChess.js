@@ -43,6 +43,16 @@ class Lobby {
     host = null;
     started = false;
     isPrivate = false;
+    board = null;
+
+    containsPlayer(p)
+    {
+        this.players.forEach(pl => {
+            if (pl.username == p.username && pl.ip == p.ip)
+                return true;
+        });
+        return false;
+    }
 
     constructor(name)
     {

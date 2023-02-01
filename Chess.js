@@ -126,11 +126,18 @@ class Board {
 
     white = true;
 
-    getPieceAt(pos)
+    getPieceAt(pos, color = -1)
     {
-        var p = board.pieces.filter(obj => {
-            return obj.pos == pos;
-          })[0];
+        var p = null;
+        for(var i = 0; i < this.pieces.length; i++)
+        {
+          var fp = this.pieces[i];
+          if (fp.pos[0] == pos[0] && fp.pos[1] == pos[1] && (fp.color == color || color == -1))
+          {
+            p = fp;
+            break;
+          }
+        }
         return p;
     }
 

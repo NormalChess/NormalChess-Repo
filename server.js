@@ -248,7 +248,7 @@ io.on('connection', (socket) => {
         return;
       }
       var g = getLobby(v);
-      if (g == null)
+      if (g == null || (!g.containsPlayer(p)))
       {
         p.socket.emit("error", "that game was not found");
         return;
@@ -266,12 +266,69 @@ io.on('connection', (socket) => {
       start(g, p)
     });
 
+    socket.on('move', (v) => {
+      if (!p.inLobby)
+      {
+        p.socket.emit("error", "you are not in a lobby");
+        return;
+      }
+      var g = getLobby(v["gameId"]);
+      if (g == null || (!g.containsPlayer(p)))
+      {
+        p.socket.emit("error", "that game was not found");
+        return;
+      }
+
+      if ((!p.isWhite && g.board.white) || (p.isWhite && !g.board.white))
+      {
+        p.socket.emit("error", "it is not your turn");
+        return;
+      }
+
+
+      var ppos = v["piecePos"];
+      var newPos = v["newPos"];
+      
+      var piece = g.board.getPieceAt(ppos);
+
+      if (piece == null)
+      {
+        p.socket.emit("error", "that piece doesn't exist");
+        return;
+      }
+   
+      var moves = g.board.getAvaliableMoves(piece);
+
+      var goodMove = false;
+
+      moves.every(m => {
+        if (m[0] == newPos[0] && m[1] == newPos[1])
+        {
+          goodMove = true;
+          return false;
+        }
+        return true;
+      });
+
+      if (!goodMove)
+      {
+        p.socket.emit("error", "that piece can't move there!");
+        return;
+      }
+
+      g.board.white = !g.board.white;
+
+    });
+
     socket.on('leave', (v) => {
       if (!p.inLobby)
         return;
       var g = getLobby(v);
-      if (g == null)
+      if (g == null || (!g.containsPlayer(p)))
+      {
+        p.socket.emit("error", "that game was not found");
         return;
+      }
       p.lookingForLobby = true;
       g.playerCount--;
       g.op = "";
@@ -299,7 +356,7 @@ io.on('connection', (socket) => {
         });
       }
       showLobbies(p.socket, p);
-  });
+    });
 
 
     socket.on('create', (v) => {

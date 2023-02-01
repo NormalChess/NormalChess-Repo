@@ -3,6 +3,54 @@
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
+function createNotification(message) {
+  // Check if there's already a notification present
+  const existingNotification = document.querySelector('.notification');
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+
+  // Create the notification container
+  const notification = document.createElement('div');
+  notification.classList.add('notification');
+  notification.style.backgroundColor = '#333';
+  notification.style.color = '#fff';
+  notification.style.padding = '10px';
+  notification.style.position = 'fixed';
+  notification.style.top = '-50px';
+  notification.style.left = '50%';
+  notification.style.transform = 'translateX(-50%)';
+  notification.style.zIndex = '999';
+  notification.style.transition = 'top 0.5s ease-in-out';
+
+  // Add the message to the notification
+  notification.textContent = message;
+
+  // Append the notification to the body
+  document.body.appendChild(notification);
+
+  // Show the notification
+  setTimeout(() => {
+    notification.style.top = '20px';
+  }, 50);
+
+  // Hide the notification after 5 seconds
+  setTimeout(() => {
+    notification.style.top = '-50px';
+  }, 5000);
+
+  // Remove the notification from the DOM after the animation is complete
+  setTimeout(() => {
+    notification.remove();
+  }, 5500);
+}
+
+// Store color
+var myColor = 0;
+
+// Store selected tile
+var tile = "";
+
 // Store board state
 var state = [];
 
@@ -21,13 +69,13 @@ var board = null;
 // Create a socket.io object
 var socket = io();
 
-function getPieceAt(board, pos)
+function getPieceAt(board, pos, color = -1)
 {
     var p = null;
     for(var i = 0; i < board.pieces.length; i++)
     {
       var fp = board.pieces[i];
-      if (fp.pos[0] == pos[0] && fp.pos[1] == pos[1])
+      if (fp.pos[0] == pos[0] && fp.pos[1] == pos[1] && (fp.color == color || color == -1))
       {
         p = fp;
         break;
@@ -39,6 +87,7 @@ function getPieceAt(board, pos)
 function getAvaliableMoves(b, p)
     {
         var m = [];
+        var opColor = myColor == 0 ? 1 : 0;
         switch(p.type)
         {
             case 1: // pawn
@@ -64,16 +113,16 @@ function getAvaliableMoves(b, p)
                 }
                 if (p.color == 0)
                 {
-                    if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] + 1]) != null)
+                    if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] + 1], opColor) != null)
                         m.push([p.pos[0] - 1,p.pos[1] + 1], true);
-                    if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] + 1]) != null)
+                    if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] + 1], opColor) != null)
                         m.push([p.pos[0] + 1,p.pos[1] + 1], true);
                 }
                 else
                 {
-                    if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] - 1]) != null)
+                    if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] - 1], opColor) != null)
                         m.push([p.pos[0] - 1,p.pos[1] - 1], true);
-                    if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] - 1]) != null)
+                    if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] - 1], opColor) != null)
                         m.push([p.pos[0] + 1,p.pos[1] - 1], true);
                 }
 
@@ -87,25 +136,25 @@ function getAvaliableMoves(b, p)
                     var x4 = [p.pos[0] + i,p.pos[1] - i];
                     if (!found[0])
                     {
-                        var take = getPieceAt(b, x1) != null;
+                        var take = getPieceAt(b, x1, opColor) != null;
                         found[0] = take;
                         m.push(x1, take);
                     }
                     if (!found[1])
                     {
-                        var take = getPieceAt(b, x2) != null;
+                        var take = getPieceAt(b, x2, opColor) != null;
                         found[1] = take;
                         m.push(x2, take);
                     }
                     if (!found[2])
                     {
-                        var take = getPieceAt(b, x3) != null;
+                        var take = getPieceAt(b, x3, opColor) != null;
                         found[2] = take;
                         m.push(x3, take);
                     }
                     if (!found[3])
                     {
-                        var take = getPieceAt(b, x4) != null;
+                        var take = getPieceAt(b, x4, opColor) != null;
                         found[3] = take;
                         m.push(x4, take);
                     }
@@ -114,27 +163,27 @@ function getAvaliableMoves(b, p)
             case 3: // knight
                 // too lazy to look for a cleaner solution
                 var x1 = [p.pos[0] - 1, p.pos[1] + 2];
-                x1.push(getPieceAt(b, x1) != null);
+                x1.push(getPieceAt(b, x1, opColor) != null);
                 var x2 = [p.pos[0] - 2, p.pos[1] + 1];
-                x2.push(getPieceAt(b, x2) != null);
+                x2.push(getPieceAt(b, x2, opColor) != null);
                 m.push(x1);
                 m.push(x2);
                 x1 = [p.pos[0] + 1, p.pos[1] + 2];
-                x1.push(getPieceAt(b, x1) != null);
+                x1.push(getPieceAt(b, x1, opColor) != null);
                 x2 = [p.pos[0] + 2, p.pos[1] + 1];
-                x2.push(getPieceAt(b, x2) != null);
+                x2.push(getPieceAt(b, x2, opColor) != null);
                 m.push(x1);
                 m.push(x2);
                 x1 = [p.pos[0] - 1, p.pos[1] - 2];
-                x1.push(getPieceAt(b, x1) != null);
+                x1.push(getPieceAt(b, x1, opColor) != null);
                 x2 = [p.pos[0] - 2, p.pos[1] - 1];
-                x2.push(getPieceAt(b, x2) != null);
+                x2.push(getPieceAt(b, x2, opColor) != null);
                 m.push(x1);
                 m.push(x2);
                 x1 = [p.pos[0] + 1, p.pos[1] - 2];
-                x1.push(getPieceAt(b, x1) != null);
+                x1.push(getPieceAt(b, x1, opColor) != null);
                 x2 = [p.pos[0] + 2, p.pos[1] - 1];
-                x2.push(getPieceAt(b, x2) != null);
+                x2.push(getPieceAt(b, x2, opColor) != null);
                 m.push(x1);
                 m.push(x2);
                 break;
@@ -212,6 +261,7 @@ function clearBasedOn(array)
       if (array.includes(id))
       {
         var el = document.getElementById(id);
+        el.style.backgroundColor = el.style.accentColor;
         el.innerHTML = "";
       }
     }
@@ -226,6 +276,7 @@ function inverseClearBasedOn(array)
       if (!array.includes(id))
       {
         var el = document.getElementById(id);
+        el.style.backgroundColor = el.style.accentColor;
         el.innerHTML = "";
       }
     }
@@ -261,7 +312,9 @@ function setSVG(pos, type, color, board)
 {
   var id = getFile(pos[0]) + (pos[1] + 1);
 
+
   var c = document.getElementById(id);
+  var previousColor = c.style.backgroundColor;
   if (type != -1)
   {
     var t = '/art/' + typeToPiece(type, color) + '.svg';
@@ -274,7 +327,12 @@ function setSVG(pos, type, color, board)
       playable = [];
       selectedPiece = p;
       document.addEventListener("mousemove", mMove, false);
-      document.addEventListener("mouseup", drop, false);
+      document.addEventListener("mouseup", () => {
+        c.style.backgroundColor = previousColor;
+        drop();
+      }, false);
+      tile = id;
+      c.style.backgroundColor = "#baca2b";
       setMoves(board, selectedPiece);
     }, false);
   }
@@ -327,7 +385,7 @@ function setMoves(b, piece)
     stateWithMoves.push(id);
     var c = document.getElementById(id);
     if (m[2])
-      c.style.backgroundColor = "lightred";
+      c.style.backgroundColor = "#ca2b2b";
     else
     {
       var t = '/art/playable.svg';
@@ -378,6 +436,7 @@ tbox2.addEventListener("keypress", function(event) {
 
 socket.on("error", function(v) {
   console.warn("[Normal Chess] " + v);
+  createNotification(v);
 });
 
 socket.on("nick", function(v) {
@@ -470,6 +529,8 @@ socket.on("start", function(v) {
   move("game", 0, 1);
   move("lobby", 120, 1);
 
+  myColor = v["isWhite"] ? 0 : 1;
+
   var op = document.getElementById("opText");
   op.innerHTML = l.op;
   
@@ -509,8 +570,12 @@ socket.on("start", function(v) {
           cell.style.flexWrap = "wrap";
           cell.style.alignItems = "center";
           cell.style.justifyContent = "center";
+          cell.style.accentColor = cell.style.backgroundColor;
+          var previousColor = cell.style.backgroundColor;
+
           // Add the cell to the chessboard div
           chessboard.appendChild(cell);
+
       }
   }
   svg = [];
