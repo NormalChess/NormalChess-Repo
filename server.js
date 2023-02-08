@@ -120,6 +120,9 @@ function start(g, p)
 
   
   var white = getRandomInt(2);
+  g.players.forEach(pp => {
+    pp.isWhite = false;
+  });
   g.players[white].isWhite = true;
   var i = 0;
     g.players.forEach(pp => {

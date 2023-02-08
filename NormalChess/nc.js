@@ -310,14 +310,13 @@ function mMove(event) {
 }    
 
 function elementsOverlap(el1, el2) {
-  const domRect1 = el1.getBoundingClientRect();
   const domRect2 = el2.getBoundingClientRect();
 
   return !(
-    domRect1.top > domRect2.bottom ||
-    domRect1.right < domRect2.left ||
-    domRect1.bottom < domRect2.top ||
-    domRect1.left > domRect2.right
+    el1[1] > domRect2.bottom ||
+    el1[0] + 64 < domRect2.left ||
+    el1[1] + 64 < domRect2.top ||
+    el1[0] > domRect2.right
   );
 }
 
@@ -343,17 +342,20 @@ function setSVG(pos, type, color, board)
       img.addEventListener("mousedown", function(e) {
         dragged = img;
         var p = getPieceAt(board, pos);
+        if (p == null)
+          return;
         playable = [];
         selectedPiece = p;
         document.addEventListener("mousemove", mMove, false);
         document.addEventListener("mouseup", (e) => {
           tile = [];
+          var elm = document.getElementById(id + "Drag");
           for(var i = 0; i < movePos.length; i++)
           {
             var m = movePos[i];
             var el = document.getElementById(m[2]);
             if (el != null)
-              if (elementsOverlap(img, el))
+              if (elementsOverlap([e.clientX, e.clientY], el))
               {
                   tile = [m[0], m[1]];
                   break;
