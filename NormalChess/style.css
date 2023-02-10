@@ -35,6 +35,7 @@ body {
 
  .hugeBruh {
 	width: 120%;
+	max-width: 120%;
 	flex: 0 0 120%;
  }
 
