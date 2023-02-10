@@ -33,6 +33,7 @@ The knight broke it's legs. It cannot jump anymore. It can only walk between pie
 
 ![image](https://user-images.githubusercontent.com/123427599/218219484-ef9fb9c4-1772-4ec3-a590-e41b9f6dd44c.png)
 ![image](https://user-images.githubusercontent.com/123427599/218219732-630ee817-4e08-4b49-ab7f-e46a2a11b343.png)
+![image](https://user-images.githubusercontent.com/123427599/218220068-44c35813-4947-4994-b0f2-c1bfffd97801.png)
 
 
 ## Chat
