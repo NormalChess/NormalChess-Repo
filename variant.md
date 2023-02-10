@@ -9,13 +9,23 @@ There are no checks in Normal Chess (definitely not because I don't want to prog
 
 ## Pawn
 
-The pawn is still a simple pawn, but with two changes. The pawn can now surf "en passant," an example can be found here:
+The pawn is still a simple pawn, but with three changes. 
+
+> En Passant Passant Passant Passant
+
+The pawn can now surf "en passant," an example can be found here:
 
 ![surfing en passant](https://user-images.githubusercontent.com/123427599/218216917-7f6c961a-af86-4ffc-8c8d-45232f82da4f.png)
 
 > King Promotion
 
 The pawn can now promote to a king. The enemy has to capture both kings to win.
+
+> Literally checkers
+
+The pawn can jump over pawns (not pieces) vertically on the board, and can jump over more than one at a time.
+
+Like checkers. (it is checkers)
 
 ## Chat
 
