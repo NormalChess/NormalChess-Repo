@@ -27,6 +27,14 @@ The pawn can jump over pawns (not pieces) vertically on the board, and can jump 
 
 Like checkers. (it is checkers)
 
+## Knight
+
+The knight broke it's legs. It cannot jump anymore. It can only walk between pieces to get to the square it normally could jump too.
+
+![image](https://user-images.githubusercontent.com/123427599/218219484-ef9fb9c4-1772-4ec3-a590-e41b9f6dd44c.png)
+![image](https://user-images.githubusercontent.com/123427599/218219732-630ee817-4e08-4b49-ab7f-e46a2a11b343.png)
+
+
 ## Chat
 
 The chat is used for various reasons in Online Chess, be it trash talking, begging for a draw, or telling your opponent to resign right before you blunder your queen.
