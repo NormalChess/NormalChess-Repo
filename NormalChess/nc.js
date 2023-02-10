@@ -310,14 +310,13 @@ function mMove(event) {
 }    
 
 function elementsOverlap(el1, el2) {
+  const domRect1 = el1.getBoundingClientRect();
   const domRect2 = el2.getBoundingClientRect();
 
-  return !(
-    el1[1] > domRect2.bottom ||
-    el1[0] + 64 < domRect2.left ||
-    el1[1] + 64 < domRect2.top ||
-    el1[0] > domRect2.right
-  );
+  return !(domRect1.right < domRect2.left || 
+    domRect1.left > domRect2.right || 
+    domRect1.bottom < domRect2.top || 
+    domRect1.top > domRect2.bottom)
 }
 
 function movePiece(oldPos, newPos)
@@ -355,7 +354,7 @@ function setSVG(pos, type, color, board)
             var m = movePos[i];
             var el = document.getElementById(m[2]);
             if (el != null)
-              if (elementsOverlap([e.clientX, e.clientY], el))
+              if (elementsOverlap(elm, el))
               {
                   tile = [m[0], m[1]];
                   break;
