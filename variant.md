@@ -3,11 +3,19 @@
 
 *also this is a W.I.P outline of the variant, and things will change*
 
+## Checks
+
+There are no checks in Normal Chess (definitely not because I don't want to program them), capture your opponents king(s) to win.
+
 ## Pawn
 
-The pawn is still a simple pawn, but with one change. The pawn can now surf "en passant," an example can be found here:
+The pawn is still a simple pawn, but with two changes. The pawn can now surf "en passant," an example can be found here:
 
 ![surfing en passant](https://user-images.githubusercontent.com/123427599/218216917-7f6c961a-af86-4ffc-8c8d-45232f82da4f.png)
+
+> King Promotion
+
+The pawn can now promote to a king. The enemy has to capture both kings to win.
 
 ## Chat
 
