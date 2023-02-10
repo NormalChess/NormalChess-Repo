@@ -434,9 +434,7 @@ function setMoves(b, piece)
   inverseClearBasedOn(stateWithMoves);
 }
 
-move("lobbies", 120, 0.01);
-move("lobby", 220, 0.01);
-move("game", 320, 0.01);
+
 
 var form = document.getElementById('form');
 var form2 = document.getElementById('lobbyForm');

@@ -134,7 +134,7 @@ hr.rounded {
  }
 
 .simple-container {
-    position: absolute;
+    position: fixed;
 	padding-bottom: 10%;
     display: flex;
 	right: 25%;
