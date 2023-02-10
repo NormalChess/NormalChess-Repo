@@ -337,38 +337,39 @@ function setSVG(pos, type, color, board)
     c.innerHTML = "<img id='" + id + "Drag'src='" + t + "' style='user-select: none;position: relative; background-size: cover;background-position: center;width: 100%;height: 100%;'></img>";
     var img = document.getElementById(id + "Drag");
     img.draggable = false;
-    if ((myColor == 0 && board.white) || (myColor == 1 && !board.white))
-      img.addEventListener("mousedown", function(e) {
-        dragged = img;
-        var p = getPieceAt(board, pos);
-        if (p == null)
-          return;
-        playable = [];
-        selectedPiece = p;
-        document.addEventListener("mousemove", mMove, false);
-        document.addEventListener("mouseup", (e) => {
-          tile = [];
-          var elm = document.getElementById(id + "Drag");
-          for(var i = 0; i < movePos.length; i++)
-          {
-            var m = movePos[i];
-            var el = document.getElementById(m[2]);
-            if (el != null)
-              if (elementsOverlap(elm, el))
-              {
-                  tile = [m[0], m[1]];
-                  break;
-              }
-          }
-          if (tile.length != 0 && selectedPiece.pos != tile)
-            movePiece(selectedPiece.pos, tile);
-          c.style.backgroundColor = previousColor;
-          drop();
+    if (myColor == color)
+      if ((myColor == 0 && board.white) || (myColor == 1 && !board.white))
+        img.addEventListener("mousedown", function(e) {
+          dragged = img;
+          var p = getPieceAt(board, pos);
+          if (p == null)
+            return;
+          playable = [];
+          selectedPiece = p;
+          document.addEventListener("mousemove", mMove, false);
+          document.addEventListener("mouseup", (e) => {
+            tile = [];
+            var elm = document.getElementById(id + "Drag");
+            for(var i = 0; i < movePos.length; i++)
+            {
+              var m = movePos[i];
+              var el = document.getElementById(m[2]);
+              if (el != null)
+                if (elementsOverlap(elm, el))
+                {
+                    tile = [m[0], m[1]];
+                    break;
+                }
+            }
+            if (tile.length != 0 && selectedPiece.pos != tile)
+              movePiece(selectedPiece.pos, tile);
+            c.style.backgroundColor = previousColor;
+            drop();
+          }, false);
+          tile = [pos[0],pos[1]];
+          c.style.backgroundColor = "#baca2b";
+          setMoves(board, selectedPiece);
         }, false);
-        tile = [pos[0],pos[1]];
-        c.style.backgroundColor = "#baca2b";
-        setMoves(board, selectedPiece);
-      }, false);
   }
   else
     c.innerHTML = "";
