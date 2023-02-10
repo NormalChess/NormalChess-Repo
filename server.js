@@ -317,6 +317,12 @@ io.on('connection', (socket) => {
         return;
       }
    
+      if ((piece.color == 0 && !p.isWhite) && (piece.color == 1 && p.isWhite))
+      {
+        p.socket.emit("error", "that piece can't move");
+        return;
+      }
+
       var moves = g.board.getAvaliableMoves(piece, p.isWhite);
 
       console.log(moves);
@@ -341,8 +347,6 @@ io.on('connection', (socket) => {
       g.board.makeMove(ppos, newPos);
 
       g.board.white = !g.board.white;
-
-      console.log("Sending " + g.board.moves);
 
       g.players.forEach(pp => {
         pp.socket.emit("move", g.board);
