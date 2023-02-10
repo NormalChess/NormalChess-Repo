@@ -12,9 +12,10 @@ This is **built on Node.JS**
 Currently just running 
 ```bash
 npm install
+node server.js
 ```
 
-And then running `node server.js` will get you up and running on localhost or a webserver listening to the 80 port.
+Will get you up and running on localhost or a webserver listening to the 80 port.
 
 ## WIP
 
