@@ -349,7 +349,6 @@ function setSVG(pos, type, color, board)
           document.addEventListener("mousemove", mMove, false);
           document.addEventListener("mouseup", (e) => {
             tile = [];
-            var elm = document.getElementById(id + "Drag");
             var take = false;
             for(var i = 0; i < movePos.length; i++)
             {
@@ -359,10 +358,14 @@ function setSVG(pos, type, color, board)
                 if (elementsOverlap([e.clientX, e.clientY], el))
                 {
                     take = m[3];
-                    var nid = getFile(m[0]) + (m[1] + 1);
-                    var newCell = document.getElementById(nid);
-                    var color = newCell.getAttribute("data-originalColor");
-                    newCell.style.backgroundColor = color;
+                    for(var ii = 0; ii < movePos.length; ii++)
+                    {
+                      var mm = movePos[ii];
+                      var nid = getFile(mm[0]) + (mm[1] + 1);
+                      var newCell = document.getElementById(nid);
+                      var color = newCell.getAttribute("data-originalColor");
+                      newCell.style.backgroundColor = color;
+                    }
                     tile = [m[0], m[1]];
                     break;
                 }
