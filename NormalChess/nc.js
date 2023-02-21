@@ -358,17 +358,17 @@ function setSVG(pos, type, color, board)
                 if (elementsOverlap([e.clientX, e.clientY], el))
                 {
                     take = m[3];
-                    for(var ii = 0; ii < movePos.length; ii++)
-                    {
-                      var mm = movePos[ii];
-                      var nid = getFile(mm[0]) + (mm[1] + 1);
-                      var newCell = document.getElementById(nid);
-                      var color = newCell.getAttribute("data-originalColor");
-                      newCell.style.backgroundColor = color;
-                    }
                     tile = [m[0], m[1]];
                     break;
                 }
+            }
+            for(var ii = 0; ii < movePos.length; ii++)
+            {
+              var mm = movePos[ii];
+              var nid = getFile(mm[0]) + (mm[1] + 1);
+              var newCell = document.getElementById(nid);
+              var color = newCell.getAttribute("data-originalColor");
+              newCell.style.backgroundColor = color;
             }
             if (selectedPiece != null)
               if (tile.length != 0 && selectedPiece.pos != tile)
