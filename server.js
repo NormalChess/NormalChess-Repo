@@ -343,9 +343,11 @@ io.on('connection', (socket) => {
         p.socket.emit("error", "that piece can't move there!");
         return;
       }
-
-      g.board.makeMove(ppos, newPos);
-
+      if (g.board.white)
+        g.board.makeMove(ppos, newPos, 1, 0);
+      else
+        g.board.makeMove(ppos, newPos, 0, 1);
+        
       g.board.white = !g.board.white;
 
       g.players.forEach(pp => {

@@ -116,16 +116,16 @@ function getAvaliableMoves(b, p)
                 if (p.color == 0)
                 {
                     if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] + 1], opColor) != null)
-                        m.push([p.pos[0] - 1,p.pos[1] + 1], true);
+                        m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
                     if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] + 1], opColor) != null)
-                        m.push([p.pos[0] + 1,p.pos[1] + 1], true);
+                        m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
                 }
                 else
                 {
                     if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] - 1], opColor) != null)
-                        m.push([p.pos[0] - 1,p.pos[1] - 1], true);
+                        m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
                     if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] - 1], opColor) != null)
-                        m.push([p.pos[0] + 1,p.pos[1] - 1], true);
+                        m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
                 }
 
             break;
@@ -336,6 +336,7 @@ function setSVG(pos, type, color, board)
     c.innerHTML = "<img id='" + id + "Drag'src='" + t + "' style='user-select: none;position: relative; background-size: cover;background-position: center;width: 100%;height: 100%;'></img>";
     var img = document.getElementById(id + "Drag");
     img.draggable = false;
+    img.setAttribute("data-path", t);
     if (myColor == color)
       if ((myColor == 0 && board.white) || (myColor == 1 && !board.white))
         img.addEventListener("mousedown", function(e) {
@@ -349,6 +350,7 @@ function setSVG(pos, type, color, board)
           document.addEventListener("mouseup", (e) => {
             tile = [];
             var elm = document.getElementById(id + "Drag");
+            var take = false;
             for(var i = 0; i < movePos.length; i++)
             {
               var m = movePos[i];
@@ -356,12 +358,18 @@ function setSVG(pos, type, color, board)
               if (el != null)
                 if (elementsOverlap([e.clientX, e.clientY], el))
                 {
+                    take = m[3];
+                    var nid = getFile(m[0]) + (m[1] + 1);
+                    var newCell = document.getElementById(nid);
+                    var color = newCell.getAttribute("data-originalColor");
+                    newCell.style.backgroundColor = color;
                     tile = [m[0], m[1]];
                     break;
                 }
             }
-            if (tile.length != 0 && selectedPiece.pos != tile)
-              movePiece(selectedPiece.pos, tile);
+            if (selectedPiece != null)
+              if (tile.length != 0 && selectedPiece.pos != tile)
+                movePiece(selectedPiece.pos, tile);
             c.style.backgroundColor = previousColor;
             drop();
           }, false);
@@ -418,10 +426,14 @@ function setMoves(b, piece)
     if (p != null && !m[2])
         continue;
     stateWithMoves.push(id);
-    movePos.push([m[0],m[1], id + "Move"]);
+    var mo = [m[0],m[1], id + "Move", false];
     var c = document.getElementById(id);
     if (m[2])
+    {
+      mo[2] = id + "Drag";
+      mo[3] = true;
       c.style.backgroundColor = "#ca2b2b";
+    }
     else
     {
       var t = '/art/playable.svg';
@@ -429,6 +441,7 @@ function setMoves(b, piece)
       var img = document.getElementById(id + "Move");
       img.draggable = false;
     }
+    movePos.push(mo);
   }
   inverseClearBasedOn(stateWithMoves);
 }
@@ -605,7 +618,7 @@ socket.on("start", function(v) {
           cell.style.alignItems = "center";
           cell.style.justifyContent = "center";
           cell.style.accentColor = cell.style.backgroundColor;
-
+          cell.setAttribute("data-originalColor", cell.style.backgroundColor);
           // Add the cell to the chessboard div
           chessboard.appendChild(cell);
 

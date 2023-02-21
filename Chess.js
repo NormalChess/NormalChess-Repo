@@ -98,6 +98,7 @@ class Move {
 }
 
 class Piece {
+    id = 0;
     svgId = "";
     moveLifetime = 0;
     color = 0;
@@ -105,11 +106,12 @@ class Piece {
     pos = [0,0];
     lastPos = [0,0];
     move = null;
-    constructor(_pos, _type, _c)
+    constructor(_pos, _type, _c, _id)
     {
         this.color = _c;
         this.type = _type;
         this.pos = _pos;
+        this.id = _id;
     }
 }
   
@@ -242,53 +244,60 @@ class Board {
         return m;
     }
 
-    removePiece(pos)
+    removePiece(piece)
     {
-        pieces = pieces.filter(p => p.pos != pos);
+        for(var i=0; i < this.pieces.length; i++) {
+            if(this.pieces[i].id == piece.id)
+            {
+               this.pieces.splice(i,1)
+               break;
+            }
+         }
     }
 
-    makeMove(from, to)
+    makeMove(from, to, opColor, myColor)
     {
-        var piece = this.getPieceAt(to);
-        var fpiece = this.getPieceAt(from);
+        var piece = this.getPieceAt(to, opColor);
+        var fpiece = this.getPieceAt(from, myColor);
         var take = false;
         if (piece != null)
         {
             take = true;
-            this.removePiece(to);
+            this.removePiece(piece);
         }
 
         this.moves.push(new Move(from, to, fpiece.type, 0, take));
         fpiece.pos = to;
+        fpiece.moveLifetime++;
     }
 
     constructor()
     {
         // P1
-        this.pieces.push(new Piece([0,0], 4, 0));
-        this.pieces.push(new Piece([1,0], 3, 0));
-        this.pieces.push(new Piece([2,0], 2, 0));
-        this.pieces.push(new Piece([3,0], 5, 0));
-        this.pieces.push(new Piece([4,0], 6, 0));
-        this.pieces.push(new Piece([5,0], 2, 0));
-        this.pieces.push(new Piece([6,0], 3, 0));
-        this.pieces.push(new Piece([7,0], 4, 0));
+        this.pieces.push(new Piece([0,0], 4, 0, 1));
+        this.pieces.push(new Piece([1,0], 3, 0, 2));
+        this.pieces.push(new Piece([2,0], 2, 0, 3));
+        this.pieces.push(new Piece([3,0], 5, 0, 4));
+        this.pieces.push(new Piece([4,0], 6, 0, 5));
+        this.pieces.push(new Piece([5,0], 2, 0, 6));
+        this.pieces.push(new Piece([6,0], 3, 0, 7));
+        this.pieces.push(new Piece([7,0], 4, 0, 8));
         for(var i = 0; i < 8; i++)
         {
-            this.pieces.push(new Piece([i,1], 1, 0));
+            this.pieces.push(new Piece([i,1], 1, 0, 9 + i));
         }
         // P2
-        this.pieces.push(new Piece([0,7], 4, 1));
-        this.pieces.push(new Piece([1,7], 3, 1));
-        this.pieces.push(new Piece([2,7], 2, 1));
-        this.pieces.push(new Piece([3,7], 5, 1));
-        this.pieces.push(new Piece([4,7], 6, 1));
-        this.pieces.push(new Piece([5,7], 2, 1));
-        this.pieces.push(new Piece([6,7], 3, 1));
-        this.pieces.push(new Piece([7,7], 4, 1));
+        this.pieces.push(new Piece([0,7], 4, 1, 9));
+        this.pieces.push(new Piece([1,7], 3, 1, 10));
+        this.pieces.push(new Piece([2,7], 2, 1, 11));
+        this.pieces.push(new Piece([3,7], 5, 1, 12));
+        this.pieces.push(new Piece([4,7], 6, 1, 13));
+        this.pieces.push(new Piece([5,7], 2, 1, 14));
+        this.pieces.push(new Piece([6,7], 3, 1, 15));
+        this.pieces.push(new Piece([7,7], 4, 1, 16));
         for(var i = 0; i < 8; i++)
         {
-            this.pieces.push(new Piece([i,6], 1, 1));
+            this.pieces.push(new Piece([i,6], 1, 1, 17 + i));
         }
     }
 }
