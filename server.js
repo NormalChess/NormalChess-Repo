@@ -66,9 +66,6 @@ const showLobbies = (socket, p) => {
   socket.emit('lobbies', {list: shown, username: p.username});
 }
 
-app.post('/', (request, response) => {
-  console.log(JSON.stringify(request.path))
-})
 
 challengeIp = [];
 
@@ -324,8 +321,6 @@ io.on('connection', (socket) => {
       }
 
       var moves = g.board.getAvaliableMoves(piece, p.isWhite);
-
-      console.log(moves);
 
       var goodMove = false;
 

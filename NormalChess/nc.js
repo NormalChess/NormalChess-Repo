@@ -86,6 +86,11 @@ function getPieceAt(board, pos, color = -1)
 
 var movePos = [];
 
+function checkPiece(board, cords, color)
+    {
+        return getPieceAt(board, cords, color) != null;
+    }
+
 function getAvaliableMoves(b, p)
     {
         var m = [];
@@ -98,12 +103,12 @@ function getAvaliableMoves(b, p)
                     if (p.color == 0)
                     {
                         m.push([p.pos[0],p.pos[1] + 1, false]);
-                        m.push([p.pos[0],p.pos[1] + 2, false]);
+                        m.push([p.pos[0],p.pos[1] + 2, false]); 
                     }
                     else
                     {
-                        m.push([p.pos[0],p.pos[1] - 1, false]);
-                        m.push([p.pos[0],p.pos[1] - 2, false]);
+                      m.push([p.pos[0],p.pos[1] - 1, false]);
+                      m.push([p.pos[0],p.pos[1] - 2, false]);
                     }
                 }
                 else
@@ -115,17 +120,17 @@ function getAvaliableMoves(b, p)
                 }
                 if (p.color == 0)
                 {
-                    if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] + 1], opColor) != null)
+                    if (checkPiece(b, [p.pos[0] - 1, p.pos[1] + 1]))
                         m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
-                    if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] + 1], opColor) != null)
+                    if (checkPiece(b, [p.pos[0] + 1, p.pos[1] + 1]))
                         m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
                 }
                 else
                 {
-                    if (getPieceAt(b, [p.pos[0] - 1, p.pos[1] - 1], opColor) != null)
-                        m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
-                    if (getPieceAt(b, [p.pos[0] + 1, p.pos[1] - 1], opColor) != null)
-                        m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
+                    if (checkPiece(b, [p.pos[0] - 1, p.pos[1] - 1]))
+                        m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
+                    if (checkPiece(b, [p.pos[0] + 1, p.pos[1] - 1]))
+                        m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
                 }
 
             break;
@@ -138,54 +143,314 @@ function getAvaliableMoves(b, p)
                     var x4 = [p.pos[0] + i,p.pos[1] - i];
                     if (!found[0])
                     {
-                        var take = getPieceAt(b, x1, opColor) != null;
+                        var take = checkPiece(b,x1, opColor);
                         found[0] = take;
-                        m.push(x1, take);
+                        if (!take)
+                            if (checkPiece(b,x1))
+                            {
+                                found[0] = true;
+                                continue; 
+                            }
+                        x1.push(take);
+                        m.push(x1);
                     }
                     if (!found[1])
                     {
-                        var take = getPieceAt(b, x2, opColor) != null;
+                        var take = checkPiece(b,x2, opColor);
                         found[1] = take;
-                        m.push(x2, take);
+                        if (!take)
+                            if (checkPiece(b,x2))
+                            {
+                                found[0] = true;
+                                continue; 
+                            }
+                        x2.push(take);
+                        m.push(x2);
                     }
                     if (!found[2])
                     {
-                        var take = getPieceAt(b, x3, opColor) != null;
+                        var take = checkPiece(b,x3, opColor);
                         found[2] = take;
-                        m.push(x3, take);
+                        if (!take)
+                            if (checkPiece(b,x3))
+                            {
+                                found[0] = true;
+                                continue; 
+                            }
+                        x3.push(take);
+                        m.push(x3);
                     }
                     if (!found[3])
                     {
-                        var take = getPieceAt(b, x4, opColor) != null;
+                        var take = checkPiece(b,x4, opColor);
                         found[3] = take;
-                        m.push(x4, take);
+                        if (!take)
+                            if (checkPiece(b,x4))
+                            {
+                                found[0] = true;
+                                continue; 
+                            }
+                        x4.push(take);
+                        m.push(x4);
                     }
                 }
                 break;
             case 3: // knight
                 // too lazy to look for a cleaner solution
                 var x1 = [p.pos[0] - 1, p.pos[1] + 2];
-                x1.push(getPieceAt(b, x1, opColor) != null);
+                x1.push(checkPiece(b,x1, opColor));
                 var x2 = [p.pos[0] - 2, p.pos[1] + 1];
-                x2.push(getPieceAt(b, x2, opColor) != null);
+                x2.push(checkPiece(b,x2, opColor));
                 m.push(x1);
                 m.push(x2);
                 x1 = [p.pos[0] + 1, p.pos[1] + 2];
-                x1.push(getPieceAt(b, x1, opColor) != null);
+                x1.push(checkPiece(b,x1, opColor));
                 x2 = [p.pos[0] + 2, p.pos[1] + 1];
-                x2.push(getPieceAt(b, x2, opColor) != null);
+                x2.push(checkPiece(b,x2, opColor));
                 m.push(x1);
                 m.push(x2);
                 x1 = [p.pos[0] - 1, p.pos[1] - 2];
-                x1.push(getPieceAt(b, x1, opColor) != null);
+                x1.push(checkPiece(b,x1, opColor));
                 x2 = [p.pos[0] - 2, p.pos[1] - 1];
-                x2.push(getPieceAt(b, x2, opColor) != null);
+                x2.push(checkPiece(b,x2, opColor));
                 m.push(x1);
                 m.push(x2);
                 x1 = [p.pos[0] + 1, p.pos[1] - 2];
-                x1.push(getPieceAt(b, x1, opColor) != null);
+                x1.push(checkPiece(b,x1, opColor));
                 x2 = [p.pos[0] + 2, p.pos[1] - 1];
-                x2.push(getPieceAt(b, x2, opColor) != null);
+                x2.push(checkPiece(b,x2, opColor));
+                m.push(x1);
+                m.push(x2);
+                break;
+            case 4: // Rook
+                var found = [false, false, false, false];
+                for (var i = 0; i < 8; i++) {
+                    var x1 = [p.pos[0] - i, p.pos[1]];
+                    var x2 = [p.pos[0] + i, p.pos[1]];
+                    var x3 = [p.pos[0], p.pos[1] + i];
+                    var x4 = [p.pos[0], p.pos[1] - i];
+                    if (!found[0])
+                    {
+                        var take = checkPiece(b,x1, opColor);
+                        found[0] = take;
+                        if (!take)
+                            if (checkPiece(b,x1))
+                            {
+                                found[0] = true;
+                                continue; 
+                            }
+                        x1.push(take);
+                        m.push(x1);
+                    }
+                    if (!found[1])
+                    {
+                        var take = checkPiece(b,x2, opColor);
+                        found[1] = take;
+                        if (!take)
+                            if (checkPiece(b,x2))
+                            {
+                                found[1] = true;
+                                continue; 
+                            }
+                        x2.push(take);
+                        m.push(x2);
+                    }
+                    if (!found[2])
+                    {
+                        var take = checkPiece(b,x3, opColor);
+                        found[2] = take;
+                        if (!take)
+                            if (checkPiece(b,x3))
+                            {
+                                found[2] = true;
+                                continue; 
+                            }
+                        x3.push(take);
+                        m.push(x3);
+                    }
+                    if (!found[3])
+                    {
+                        var take = checkPiece(b,x4, opColor);
+                        found[3] = take;
+                        if (!take)
+                            if (checkPiece(b,x4))
+                            {
+                                found[3] = true;
+                                continue; 
+                            }
+                        x4.push(take);
+                        m.push(x4);
+                    }
+                }
+                break;
+            case 5: // Queen
+                // copypasted both bishop and rook lol
+                var found = [false, false, false, false];
+                for (var i = 0; i < 8; i++) {
+                    var x1 = [p.pos[0] - i, p.pos[1]];
+                    var x2 = [p.pos[0] + i, p.pos[1]];
+                    var x3 = [p.pos[0], p.pos[1] + i];
+                    var x4 = [p.pos[0], p.pos[1] - i];
+                    if (!found[0])
+                    {
+                        var take = checkPiece(b,x1, opColor);
+                        found[0] = take;
+                        if (!take)
+                            if (checkPiece(b,x1))
+                            {
+                                found[0] = true;
+                                continue; 
+                            }
+                        x1.push(take);
+                        m.push(x1);
+                    }
+                    if (!found[1])
+                    {
+                        var take = checkPiece(b,x2, opColor);
+                        found[1] = take;
+                        if (!take)
+                            if (checkPiece(b,x2))
+                            {
+                                found[1] = true;
+                                continue; 
+                            }
+                        x2.push(take);
+                        m.push(x2);
+                    }
+                    if (!found[2])
+                    {
+                        var take = checkPiece(b,x3, opColor);
+                        found[2] = take;
+                        if (!take)
+                            if (checkPiece(b,x3))
+                            {
+                                found[2] = true;
+                                continue; 
+                            }
+                        x3.push(take);
+                        m.push(x3);
+                    }
+                    if (!found[3])
+                    {
+                        var take = checkPiece(b,x4, opColor);
+                        found[3] = take;
+                        if (!take)
+                            if (checkPiece(b,x4))
+                            {
+                                found[3] = true;
+                                continue; 
+                            }
+                        x4.push(take);
+                        m.push(x4);
+                    }
+                }
+                found = [false, false, false, false];
+                for (var i = 0; i < 8; i++) {
+                    var x1 = [p.pos[0] - i,p.pos[1] - i];
+                    var x2 = [p.pos[0] + i,p.pos[1] + i];
+                    var x3 = [p.pos[0] - i,p.pos[1] + i];
+                    var x4 = [p.pos[0] + i,p.pos[1] - i];
+                    if (!found[0])
+                    {
+                        var take = checkPiece(b,x1, opColor);
+                        found[0] = take;
+                        if (!take)
+                            if (checkPiece(b,x1))
+                            {
+                                found[0] = true;
+                                continue; 
+                            }
+                        x1.push(take);
+                        m.push(x1);
+                    }
+                    if (!found[1])
+                    {
+                        var take = checkPiece(b,x2, opColor);
+                        found[1] = take;
+                        if (!take)
+                            if (checkPiece(b,x2))
+                            {
+                                found[1] = true;
+                                continue; 
+                            }
+                        x2.push(take);
+                        m.push(x2);
+                    }
+                    if (!found[2])
+                    {
+                        var take = checkPiece(b,x3, opColor);
+                        found[2] = take;
+                        if (!take)
+                            if (checkPiece(b,x3))
+                            {
+                                found[2] = true;
+                                continue; 
+                            }
+                        x3.push(take);
+                        m.push(x3);
+                    }
+                    if (!found[3])
+                    {
+                        var take = checkPiece(b,x4, opColor);
+                        found[3] = take;
+                        if (!take)
+                            if (checkPiece(b,x4))
+                            {
+                                found[3] = true;
+                                continue; 
+                            }
+                        x4.push(take);
+                        m.push(x4);
+                    }
+                }
+                break;
+            case 6: // King (I again, don't want to talk about it.)
+                var x1 = [p.pos[0] - 1, p.pos[1] - 1];
+                x1.push(checkPiece(b,x1, opColor));
+                var x2 = [p.pos[0] - 1, p.pos[1] + 1];
+                x2.push(checkPiece(b,x2, opColor));
+                m.push(x1);
+                m.push(x2);
+                var x1 = [p.pos[0] - 1, p.pos[1] + 1];
+                x1.push(checkPiece(b,x1, opColor));
+                var x2 = [p.pos[0] - 1, p.pos[1] - 1];
+                x2.push(checkPiece(b,x2, opColor));
+                m.push(x1);
+                m.push(x2);
+                x1 = [p.pos[0] + 1, p.pos[1] - 1];
+                x1.push(checkPiece(b,x1, opColor));
+                x2 = [p.pos[0] + 1, p.pos[1] + 1];
+                x2.push(checkPiece(b,x2, opColor));
+                m.push(x1);
+                m.push(x2);
+                x1 = [p.pos[0] + 1, p.pos[1] + 1];
+                x1.push(checkPiece(b,x1, opColor));
+                x2 = [p.pos[0] + 1, p.pos[1] - 1];
+                x2.push(checkPiece(b,x2, opColor));
+                m.push(x1);
+                m.push(x2);
+                x1 = [p.pos[0] + 1, p.pos[1]];
+                x1.push(checkPiece(b,x1, opColor));
+                x2 = [p.pos[0] + 1, p.pos[1]];
+                x2.push(checkPiece(b,x2, opColor));
+                m.push(x1);
+                m.push(x2);
+                x1 = [p.pos[0], p.pos[1] + 1];
+                x1.push(checkPiece(b,x1, opColor));
+                x2 = [p.pos[0], p.pos[1] + 1];
+                x2.push(checkPiece(b,x2, opColor));
+                m.push(x1);
+                m.push(x2);
+                x1 = [p.pos[0] - 1, p.pos[1]];
+                x1.push(checkPiece(b,x1, opColor));
+                x2 = [p.pos[0] - 1, p.pos[1]];
+                x2.push(checkPiece(b,x2, opColor));
+                m.push(x1);
+                m.push(x2);
+                x1 = [p.pos[0], p.pos[1] - 1];
+                x1.push(checkPiece(b,x1, opColor));
+                x2 = [p.pos[0], p.pos[1] - 1];
+                x2.push(checkPiece(b,x2, opColor));
                 m.push(x1);
                 m.push(x2);
                 break;
@@ -605,8 +870,11 @@ socket.on("start", function(v) {
           var s = i + 1;
           if (v["isWhite"])
             s = (8 - i);
+          var jj = j;
+          if (!v["isWhite"])
+            jj = (7 - j);
           
-          cell.id = getFile(j) + s;
+          cell.id = getFile(jj) + s;
   
           // Alternate between green and white colors
           if ((i + j) % 2 === 0) {
