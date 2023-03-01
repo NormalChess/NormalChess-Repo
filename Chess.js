@@ -169,22 +169,22 @@ class Board {
                 if (p.color == 0)
                 {
                     if (this.checkPiece([p.pos[0] - 1, p.pos[1] + 1]))
-                        m.push([p.pos[0] - 1,p.pos[1] + 1], true);
+                        m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
                     if (this.checkPiece([p.pos[0] + 1, p.pos[1] + 1]))
-                        m.push([p.pos[0] + 1,p.pos[1] + 1], true);
+                        m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
                 }
                 else
                 {
                     if (this.checkPiece([p.pos[0] - 1, p.pos[1] - 1]))
-                        m.push([p.pos[0] - 1,p.pos[1] + 1], true);
+                        m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
                     if (this.checkPiece([p.pos[0] + 1, p.pos[1] - 1]))
-                        m.push([p.pos[0] + 1,p.pos[1] + 1], true);
+                        m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
                 }
 
             break;
             case 2: // bishop
                 var found = [false, false, false, false];
-                for (var i = 0; i < 8; i++) {
+                for (var i = 1; i < 9; i++) {
                     var x1 = [p.pos[0] - i,p.pos[1] - i];
                     var x2 = [p.pos[0] + i,p.pos[1] + i];
                     var x3 = [p.pos[0] - i,p.pos[1] + i];
@@ -193,53 +193,69 @@ class Board {
                     {
                         var take = this.checkPiece(x1, opColor);
                         found[0] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x1))
                             {
                                 found[0] = true;
-                                continue; 
+                                c = false;
                             }
-                        x1.push(take);
-                        m.push(x1);
+                        if (c)
+                        {
+                            x1.push(take);
+                            m.push(x1);
+                        }
                     }
                     if (!found[1])
                     {
                         var take = this.checkPiece(x2, opColor);
                         found[1] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x2))
                             {
                                 found[1] = true;
-                                continue; 
+                                c = false;
                             }
-                        x2.push(take);
-                        m.push(x2);
+                        if (c)
+                        {
+                            x2.push(take);
+                            m.push(x2);
+                        }
                     }
                     if (!found[2])
                     {
                         var take = this.checkPiece(x3, opColor);
                         found[2] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x3))
                             {
                                 found[2] = true;
-                                continue; 
+                                c = false;
                             }
-                        x3.push(take);
-                        m.push(x3);
+                        if (c)
+                        {
+                            x3.push(take);
+                            m.push(x3);
+                        }
                     }
                     if (!found[3])
                     {
                         var take = this.checkPiece(x4, opColor);
                         found[3] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x4))
                             {
                                 found[3] = true;
-                                continue; 
+                                c = false;
                             }
-                        x4.push(take);
-                        m.push(x4);
+                        if (c)
+                        {
+                            x4.push(take);
+                            m.push(x4);
+                        }
                     }
                 }
                 break;
@@ -272,7 +288,7 @@ class Board {
                 break;
             case 4: // Rook
                 var found = [false, false, false, false];
-                for (var i = 0; i < 8; i++) {
+                for (var i = 1; i < 9; i++) {
                     var x1 = [p.pos[0] - i, p.pos[1]];
                     var x2 = [p.pos[0] + i, p.pos[1]];
                     var x3 = [p.pos[0], p.pos[1] + i];
@@ -281,60 +297,76 @@ class Board {
                     {
                         var take = this.checkPiece(x1, opColor);
                         found[0] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x1))
                             {
                                 found[0] = true;
-                                continue; 
+                                c = false;
                             }
-                        x1.push(take);
-                        m.push(x1);
+                        if (c)
+                        {
+                            x1.push(take);
+                            m.push(x1);
+                        }
                     }
                     if (!found[1])
                     {
                         var take = this.checkPiece(x2, opColor);
                         found[1] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x2))
                             {
                                 found[1] = true;
-                                continue; 
+                                c = false;
                             }
-                        x2.push(take);
-                        m.push(x2);
+                        if (c)
+                        {
+                            x2.push(take);
+                            m.push(x2);
+                        }
                     }
                     if (!found[2])
                     {
                         var take = this.checkPiece(x3, opColor);
                         found[2] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x3))
                             {
                                 found[2] = true;
-                                continue; 
+                                c = false;
                             }
-                        x3.push(take);
-                        m.push(x3);
+                        if (c)
+                        {
+                            x3.push(take);
+                            m.push(x3);
+                        }
                     }
                     if (!found[3])
                     {
                         var take = this.checkPiece(x4, opColor);
                         found[3] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x4))
                             {
                                 found[3] = true;
-                                continue; 
+                                c = false;
                             }
-                        x4.push(take);
-                        m.push(x4);
+                        if (c)
+                        {
+                            x4.push(take);
+                            m.push(x4);
+                        }
                     }
                 }
                 break;
             case 5: // Queen
                 // copypasted both bishop and rook lol
                 var found = [false, false, false, false];
-                for (var i = 0; i < 8; i++) {
+                for (var i = 1; i < 9; i++) {
                     var x1 = [p.pos[0] - i, p.pos[1]];
                     var x2 = [p.pos[0] + i, p.pos[1]];
                     var x3 = [p.pos[0], p.pos[1] + i];
@@ -343,57 +375,73 @@ class Board {
                     {
                         var take = this.checkPiece(x1, opColor);
                         found[0] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x1))
                             {
                                 found[0] = true;
-                                continue; 
+                                c = false;
                             }
-                        x1.push(take);
-                        m.push(x1);
+                        if (c)
+                        {
+                            x1.push(take);
+                            m.push(x1);
+                        }
                     }
                     if (!found[1])
                     {
                         var take = this.checkPiece(x2, opColor);
                         found[1] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x2))
                             {
                                 found[1] = true;
-                                continue; 
+                                c = false;
                             }
-                        x2.push(take);
-                        m.push(x2);
+                        if (c)
+                        {
+                            x2.push(take);
+                            m.push(x2);
+                        }
                     }
                     if (!found[2])
                     {
                         var take = this.checkPiece(x3, opColor);
                         found[2] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x3))
                             {
                                 found[2] = true;
-                                continue; 
+                                c = false;
                             }
-                        x3.push(take);
-                        m.push(x3);
+                        if (c)
+                        {
+                            x3.push(take);
+                            m.push(x3);
+                        }
                     }
                     if (!found[3])
                     {
                         var take = this.checkPiece(x4, opColor);
                         found[3] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x4))
                             {
                                 found[3] = true;
-                                continue; 
+                                c = false;
                             }
-                        x4.push(take);
-                        m.push(x4);
+                        if (c)
+                        {
+                            x4.push(take);
+                            m.push(x4);
+                        }
                     }
                 }
                 found = [false, false, false, false];
-                for (var i = 0; i < 8; i++) {
+                for (var i = 1; i < 9; i++) {
                     var x1 = [p.pos[0] - i,p.pos[1] - i];
                     var x2 = [p.pos[0] + i,p.pos[1] + i];
                     var x3 = [p.pos[0] - i,p.pos[1] + i];
@@ -402,53 +450,69 @@ class Board {
                     {
                         var take = this.checkPiece(x1, opColor);
                         found[0] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x1))
                             {
                                 found[0] = true;
-                                continue; 
+                                c = false;
                             }
-                        x1.push(take);
-                        m.push(x1);
+                        if (c)
+                        {
+                            x1.push(take);
+                            m.push(x1);
+                        }
                     }
                     if (!found[1])
                     {
                         var take = this.checkPiece(x2, opColor);
                         found[1] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x2))
                             {
                                 found[1] = true;
-                                continue; 
+                                c = false;
                             }
-                        x2.push(take);
-                        m.push(x2);
+                        if (c)
+                        {
+                            x2.push(take);
+                            m.push(x2);
+                        }
                     }
                     if (!found[2])
                     {
                         var take = this.checkPiece(x3, opColor);
                         found[2] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x3))
                             {
                                 found[2] = true;
-                                continue; 
+                                c = false;
                             }
-                        x3.push(take);
-                        m.push(x3);
+                        if (c)
+                        {
+                            x3.push(take);
+                            m.push(x3);
+                        }
                     }
                     if (!found[3])
                     {
                         var take = this.checkPiece(x4, opColor);
                         found[3] = take;
+                        var c = true;
                         if (!take)
                             if (this.checkPiece(x4))
                             {
                                 found[3] = true;
-                                continue; 
+                                c = false;
                             }
-                        x4.push(take);
-                        m.push(x4);
+                        if (c)
+                        {
+                            x4.push(take);
+                            m.push(x4);
+                        }
                     }
                 }
                 break;
@@ -542,8 +606,8 @@ class Board {
         this.pieces.push(new Piece([2,0], 2, 0, 3));
         this.pieces.push(new Piece([3,0], 5, 0, 4));
         this.pieces.push(new Piece([4,0], 6, 0, 5));
-        this.pieces.push(new Piece([6,0], 2, 0, 6));
-        this.pieces.push(new Piece([5,0], 3, 0, 7));
+        this.pieces.push(new Piece([5,0], 2, 0, 7));
+        this.pieces.push(new Piece([6,0], 3, 0, 6));
         this.pieces.push(new Piece([7,0], 4, 0, 8));
         for(var i = 0; i < 8; i++)
         {
@@ -555,8 +619,8 @@ class Board {
         this.pieces.push(new Piece([2,7], 2, 1, 11));
         this.pieces.push(new Piece([3,7], 5, 1, 12));
         this.pieces.push(new Piece([4,7], 6, 1, 13));
-        this.pieces.push(new Piece([6,7], 2, 1, 14));
-        this.pieces.push(new Piece([5,7], 3, 1, 15));
+        this.pieces.push(new Piece([5,7], 2, 1, 15));
+        this.pieces.push(new Piece([6,7], 3, 1, 14));
         this.pieces.push(new Piece([7,7], 4, 1, 16));
         for(var i = 0; i < 8; i++)
         {

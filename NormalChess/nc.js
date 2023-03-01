@@ -103,13 +103,11 @@ function getAvaliableMoves(b, p)
                     if (p.color == 0)
                     {
                         m.push([p.pos[0],p.pos[1] + 1, false]);
-                        m.push([p.pos[0],p.pos[1] + 2, false]); 
+                        m.push([p.pos[0],p.pos[1] + 2, false]);
+                        return m;
                     }
-                    else
-                    {
-                      m.push([p.pos[0],p.pos[1] - 1, false]);
-                      m.push([p.pos[0],p.pos[1] - 2, false]);
-                    }
+                    m.push([p.pos[0],p.pos[1] - 1, false]);
+                    m.push([p.pos[0],p.pos[1] - 2, false]);
                 }
                 else
                 {
@@ -120,78 +118,94 @@ function getAvaliableMoves(b, p)
                 }
                 if (p.color == 0)
                 {
-                    if (checkPiece(b, [p.pos[0] - 1, p.pos[1] + 1]))
+                    if (checkPiece(b,[p.pos[0] - 1, p.pos[1] + 1]))
                         m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
-                    if (checkPiece(b, [p.pos[0] + 1, p.pos[1] + 1]))
+                    if (checkPiece(b,[p.pos[0] + 1, p.pos[1] + 1]))
                         m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
                 }
                 else
                 {
-                    if (checkPiece(b, [p.pos[0] - 1, p.pos[1] - 1]))
-                        m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
-                    if (checkPiece(b, [p.pos[0] + 1, p.pos[1] - 1]))
-                        m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
+                    if (checkPiece(b,[p.pos[0] - 1, p.pos[1] - 1]))
+                        m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
+                    if (checkPiece(b,[p.pos[0] + 1, p.pos[1] - 1]))
+                        m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
                 }
 
             break;
             case 2: // bishop
                 var found = [false, false, false, false];
-                for (var i = 0; i < 8; i++) {
+                for (var i = 1; i < 9; i++) {
                     var x1 = [p.pos[0] - i,p.pos[1] - i];
                     var x2 = [p.pos[0] + i,p.pos[1] + i];
                     var x3 = [p.pos[0] - i,p.pos[1] + i];
                     var x4 = [p.pos[0] + i,p.pos[1] - i];
                     if (!found[0])
                     {
-                        var take = checkPiece(b,x1, opColor);
+                        var take = checkPiece(b, x1, opColor);
                         found[0] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x1))
                             {
                                 found[0] = true;
-                                continue; 
+                                c = false;
                             }
-                        x1.push(take);
-                        m.push(x1);
+                        if (c)
+                        {
+                            x1.push(take);
+                            m.push(x1);
+                        }
                     }
                     if (!found[1])
                     {
-                        var take = checkPiece(b,x2, opColor);
+                        var take = checkPiece(b, x2, opColor);
                         found[1] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x2))
                             {
-                                found[0] = true;
-                                continue; 
+                                found[1] = true;
+                                c = false;
                             }
-                        x2.push(take);
-                        m.push(x2);
+                        if (c)
+                        {
+                            x2.push(take);
+                            m.push(x2);
+                        }
                     }
                     if (!found[2])
                     {
-                        var take = checkPiece(b,x3, opColor);
+                        var take = checkPiece(b, x3, opColor);
                         found[2] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x3))
                             {
-                                found[0] = true;
-                                continue; 
+                                found[2] = true;
+                                c = false;
                             }
-                        x3.push(take);
-                        m.push(x3);
+                        if (c)
+                        {
+                            x3.push(take);
+                            m.push(x3);
+                        }
                     }
                     if (!found[3])
                     {
-                        var take = checkPiece(b,x4, opColor);
+                        var take = checkPiece(b, x4, opColor);
                         found[3] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x4))
                             {
-                                found[0] = true;
-                                continue; 
+                                found[3] = true;
+                                c = false;
                             }
-                        x4.push(take);
-                        m.push(x4);
+                        if (c)
+                        {
+                            x4.push(take);
+                            m.push(x4);
+                        }
                     }
                 }
                 break;
@@ -224,183 +238,231 @@ function getAvaliableMoves(b, p)
                 break;
             case 4: // Rook
                 var found = [false, false, false, false];
-                for (var i = 0; i < 8; i++) {
+                for (var i = 1; i < 9; i++) {
                     var x1 = [p.pos[0] - i, p.pos[1]];
                     var x2 = [p.pos[0] + i, p.pos[1]];
                     var x3 = [p.pos[0], p.pos[1] + i];
                     var x4 = [p.pos[0], p.pos[1] - i];
                     if (!found[0])
                     {
-                        var take = checkPiece(b,x1, opColor);
+                        var take = checkPiece(b, x1, opColor);
                         found[0] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x1))
                             {
                                 found[0] = true;
-                                continue; 
+                                c = false;
                             }
-                        x1.push(take);
-                        m.push(x1);
+                        if (c)
+                        {
+                            x1.push(take);
+                            m.push(x1);
+                        }
                     }
                     if (!found[1])
                     {
-                        var take = checkPiece(b,x2, opColor);
+                        var take = checkPiece(b, x2, opColor);
                         found[1] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x2))
                             {
                                 found[1] = true;
-                                continue; 
+                                c = false;
                             }
-                        x2.push(take);
-                        m.push(x2);
+                        if (c)
+                        {
+                            x2.push(take);
+                            m.push(x2);
+                        }
                     }
                     if (!found[2])
                     {
-                        var take = checkPiece(b,x3, opColor);
+                        var take = checkPiece(b, x3, opColor);
                         found[2] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x3))
                             {
                                 found[2] = true;
-                                continue; 
+                                c = false;
                             }
-                        x3.push(take);
-                        m.push(x3);
+                        if (c)
+                        {
+                            x3.push(take);
+                            m.push(x3);
+                        }
                     }
                     if (!found[3])
                     {
-                        var take = checkPiece(b,x4, opColor);
+                        var take = checkPiece(b, x4, opColor);
                         found[3] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x4))
                             {
                                 found[3] = true;
-                                continue; 
+                                c = false;
                             }
-                        x4.push(take);
-                        m.push(x4);
+                        if (c)
+                        {
+                            x4.push(take);
+                            m.push(x4);
+                        }
                     }
                 }
                 break;
             case 5: // Queen
                 // copypasted both bishop and rook lol
                 var found = [false, false, false, false];
-                for (var i = 0; i < 8; i++) {
+                for (var i = 1; i < 9; i++) {
                     var x1 = [p.pos[0] - i, p.pos[1]];
                     var x2 = [p.pos[0] + i, p.pos[1]];
                     var x3 = [p.pos[0], p.pos[1] + i];
                     var x4 = [p.pos[0], p.pos[1] - i];
                     if (!found[0])
                     {
-                        var take = checkPiece(b,x1, opColor);
+                        var take = checkPiece(b, x1, opColor);
                         found[0] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x1))
                             {
                                 found[0] = true;
-                                continue; 
+                                c = false;
                             }
-                        x1.push(take);
-                        m.push(x1);
+                        if (c)
+                        {
+                            x1.push(take);
+                            m.push(x1);
+                        }
                     }
                     if (!found[1])
                     {
-                        var take = checkPiece(b,x2, opColor);
+                        var take = checkPiece(b, x2, opColor);
                         found[1] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x2))
                             {
                                 found[1] = true;
-                                continue; 
+                                c = false;
                             }
-                        x2.push(take);
-                        m.push(x2);
+                        if (c)
+                        {
+                            x2.push(take);
+                            m.push(x2);
+                        }
                     }
                     if (!found[2])
                     {
-                        var take = checkPiece(b,x3, opColor);
+                        var take = checkPiece(b, x3, opColor);
                         found[2] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x3))
                             {
                                 found[2] = true;
-                                continue; 
+                                c = false;
                             }
-                        x3.push(take);
-                        m.push(x3);
+                        if (c)
+                        {
+                            x3.push(take);
+                            m.push(x3);
+                        }
                     }
                     if (!found[3])
                     {
-                        var take = checkPiece(b,x4, opColor);
+                        var take = checkPiece(b, x4, opColor);
                         found[3] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x4))
                             {
                                 found[3] = true;
-                                continue; 
+                                c = false;
                             }
-                        x4.push(take);
-                        m.push(x4);
+                        if (c)
+                        {
+                            x4.push(take);
+                            m.push(x4);
+                        }
                     }
                 }
                 found = [false, false, false, false];
-                for (var i = 0; i < 8; i++) {
+                for (var i = 1; i < 9; i++) {
                     var x1 = [p.pos[0] - i,p.pos[1] - i];
                     var x2 = [p.pos[0] + i,p.pos[1] + i];
                     var x3 = [p.pos[0] - i,p.pos[1] + i];
                     var x4 = [p.pos[0] + i,p.pos[1] - i];
                     if (!found[0])
                     {
-                        var take = checkPiece(b,x1, opColor);
+                        var take = checkPiece(b, x1, opColor);
                         found[0] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x1))
                             {
                                 found[0] = true;
-                                continue; 
+                                c = false;
                             }
-                        x1.push(take);
-                        m.push(x1);
+                        if (c)
+                        {
+                            x1.push(take);
+                            m.push(x1);
+                        }
                     }
                     if (!found[1])
                     {
-                        var take = checkPiece(b,x2, opColor);
+                        var take = checkPiece(b, x2, opColor);
                         found[1] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x2))
                             {
                                 found[1] = true;
-                                continue; 
+                                c = false;
                             }
-                        x2.push(take);
-                        m.push(x2);
+                        if (c)
+                        {
+                            x2.push(take);
+                            m.push(x2);
+                        }
                     }
                     if (!found[2])
                     {
-                        var take = checkPiece(b,x3, opColor);
+                        var take = checkPiece(b, x3, opColor);
                         found[2] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x3))
                             {
                                 found[2] = true;
-                                continue; 
+                                c = false;
                             }
-                        x3.push(take);
-                        m.push(x3);
+                        if (c)
+                        {
+                            x3.push(take);
+                            m.push(x3);
+                        }
                     }
                     if (!found[3])
                     {
-                        var take = checkPiece(b,x4, opColor);
+                        var take = checkPiece(b, x4, opColor);
                         found[3] = take;
+                        var c = true;
                         if (!take)
                             if (checkPiece(b,x4))
                             {
                                 found[3] = true;
-                                continue; 
+                                c = false;
                             }
-                        x4.push(take);
-                        m.push(x4);
+                        if (c)
+                        {
+                            x4.push(take);
+                            m.push(x4);
+                        }
                     }
                 }
                 break;
