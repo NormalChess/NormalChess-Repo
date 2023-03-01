@@ -614,17 +614,17 @@ class Board {
             this.pieces.push(new Piece([i,1], 1, 0, 9 + i));
         }
         // P2
-        this.pieces.push(new Piece([0,7], 4, 1, 9));
-        this.pieces.push(new Piece([1,7], 3, 1, 10));
-        this.pieces.push(new Piece([2,7], 2, 1, 11));
-        this.pieces.push(new Piece([3,7], 5, 1, 12));
-        this.pieces.push(new Piece([4,7], 6, 1, 13));
-        this.pieces.push(new Piece([5,7], 2, 1, 15));
-        this.pieces.push(new Piece([6,7], 3, 1, 14));
-        this.pieces.push(new Piece([7,7], 4, 1, 16));
+        this.pieces.push(new Piece([0,7], 4, 1, 17));
+        this.pieces.push(new Piece([1,7], 3, 1, 18));
+        this.pieces.push(new Piece([2,7], 2, 1, 19));
+        this.pieces.push(new Piece([3,7], 5, 1, 20));
+        this.pieces.push(new Piece([4,7], 6, 1, 21));
+        this.pieces.push(new Piece([5,7], 2, 1, 22));
+        this.pieces.push(new Piece([6,7], 3, 1, 23));
+        this.pieces.push(new Piece([7,7], 4, 1, 24));
         for(var i = 0; i < 8; i++)
         {
-            this.pieces.push(new Piece([i,6], 1, 1, 17 + i));
+            this.pieces.push(new Piece([i,6], 1, 1, 25 + i));
         }
     }
 }
