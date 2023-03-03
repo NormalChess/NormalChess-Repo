@@ -2,6 +2,26 @@
     from https://gist.github.com/ZachSaucier/8295d9dc926d7064ff0d4f3f04b35b55
 */
 
+
+::-webkit-scrollbar {
+	width: 10px;
+	border-radius: 4%;
+  }
+  
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+  
+
+::-webkit-scrollbar-thumb {
+	background: #888;
+}
+  
+
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
+
 @import 'https://fonts.googleapis.com/css?family=Open+Sans';
 
 * {
@@ -70,8 +90,9 @@ body {
 
 
 .mList {
+	position: absolute;
 	width: 75%;
-	height: 75%;
+	height: 20%;
 	background-color: rgb(19, 19, 19);
 	z-index: 1;
     font-size: 16px;
@@ -80,12 +101,19 @@ body {
     border-radius: 20px; /* round the corners with a 20px radius */
 	padding-left: 3%;
 	padding-top: 1%;
-	overflow: auto;
+	margin-bottom: 25%;
+}
+
+.scroll {
+	height: 60%;
+	overflow-y: scroll;
+	padding-right: -10%;
 }
 
 .cList {
+	position: absolute;
 	width: 75%;
-	height: 85%;
+	height: 20%;
 	background-color: rgb(19, 19, 19);
 	z-index: 1;
     font-size: 16px;

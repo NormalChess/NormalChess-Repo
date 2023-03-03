@@ -989,6 +989,7 @@ function setListMoves(moves)
       content += "<b>" + m.mName + "</b>";
   }
   l.innerHTML = content;
+  l.scrollTo(0, l.scrollHeight);
 }
 
 socket.on("move", function(b) {
