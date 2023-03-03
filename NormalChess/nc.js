@@ -901,7 +901,7 @@ socket.on("lobby", function(v) {
 
 socket.on("start", function(v) {
   // Create chess and stuff
-  var board = v["board"];
+  board = v["board"];
   var l = v["lobby"];
   move("nickname", 120, 1);
   move("lobbies", 120, 1);
@@ -972,9 +972,29 @@ socket.on("start", function(v) {
 
 });
 
+function setListMoves(moves)
+{
+  var l = document.getElementById("moves");
+  var content = "<ol><li>";
+  for(var i = 0; i < moves.length; i++)
+  {
+    var m = moves[i];
+    if (i % 2 == 1)
+    {
+      content += "- <b>" + m.mName + "</b></li>"
+      if (i + 1 < moves.length)
+        content += "<li>";
+    }
+    else
+      content += "<b>" + m.mName + "</b>";
+  }
+  l.innerHTML = content;
+}
+
 socket.on("move", function(b) {
   board = b;
   svg = [];
   state = setPieces(board);
   inverseClearBasedOn(state);
+  setListMoves(board.moves);
 });

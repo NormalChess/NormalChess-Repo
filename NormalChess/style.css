@@ -80,6 +80,7 @@ body {
     border-radius: 20px; /* round the corners with a 20px radius */
 	padding-left: 3%;
 	padding-top: 1%;
+	overflow: auto;
 }
 
 .cList {
