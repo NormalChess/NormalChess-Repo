@@ -723,6 +723,9 @@ function move(divId, amt, t) {
 function setPieces(b)
 {
   var ar = [];
+  // x = j
+  // y = i
+  // simple 9x9 2d array type thing ish
   for (var i = 0; i < 8; i++) {
     for (var j = 0; j < 8; j++) {
       var p = getPieceAt(b, [j,i]);
@@ -743,7 +746,7 @@ function setPieces(b)
 function setMoves(b, piece)
 {
   var moves = getAvaliableMoves(b, piece);
-  console.log(moves);
+
   var stateWithMoves = [...state];
   movePos = [];
   for (var i = 0; i < moves.length; i++) {
@@ -900,7 +903,6 @@ socket.on("start", function(v) {
   // Create chess and stuff
   var board = v["board"];
   var l = v["lobby"];
-  console.log(l);
   move("nickname", 120, 1);
   move("lobbies", 120, 1);
   move("game", 0, 1);
@@ -971,7 +973,6 @@ socket.on("start", function(v) {
 });
 
 socket.on("move", function(b) {
-  console.log("obtained move from server");
   board = b;
   svg = [];
   state = setPieces(board);

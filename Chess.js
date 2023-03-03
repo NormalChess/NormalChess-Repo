@@ -40,10 +40,10 @@ class Move {
             case 0: // regular move
                 var output = "";
                 pos.every(m => {
-                    var c = m.capture;
+                    var c = m[2];
                     var f = Move.getFile(m);
                     var lf = Move.getFile(from);
-                    var t = f + (m.y + 1);
+                    var t = f + (m[1] + 1);
                     if (c)
                     {
                         if (type != 1) // pawn has a different notation
@@ -593,7 +593,10 @@ class Board {
             this.removePiece(piece);
         }
 
-        this.moves.push(new Move(from, to, fpiece.type, 0, take));
+        var t = to;
+        to.push(take);
+
+        this.moves.push(new Move(from, [t], fpiece.type, 0, take));
         fpiece.pos = to;
         fpiece.moveLifetime++;
     }
