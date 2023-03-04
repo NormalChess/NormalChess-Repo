@@ -78,6 +78,8 @@ body {
 	padding-top: 1%;
  }
  
+
+ 
  .leFlex {
 	margin-top: 2%;
 	display: flex;
@@ -101,13 +103,11 @@ body {
     border-radius: 20px; /* round the corners with a 20px radius */
 	padding-left: 3%;
 	padding-top: 1%;
-	margin-bottom: 25%;
 }
 
 .scroll {
 	height: 60%;
 	overflow-y: scroll;
-	padding-right: -10%;
 }
 
 .cList {
@@ -123,6 +123,18 @@ body {
 	padding-left: 3%;
 	padding-top: 1%;
 }
+
+@media (max-width: 1000px) {
+	.leFlex {
+		margin-top: 2%;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		width: 100%;
+		height: 75%;
+		list-style-type: none;
+	 }
+ }
 
  /* Rounded border */
 hr.rounded {
