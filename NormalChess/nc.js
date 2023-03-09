@@ -45,6 +45,17 @@ function createNotification(message) {
   }, 5500);
 }
 
+// resign and draw button
+var resign = document.getElementById("resign");
+var draw = document.getElementById("draw");
+
+resign.disabled = true;
+draw.disabled = true;
+
+// leave button
+var leave = document.getElementById("leave");
+leave.style.opacity = 0;
+
 // Store color
 var myColor = 0;
 
@@ -664,7 +675,7 @@ function setSVG(pos, type, color, board)
     var img = document.getElementById(id + "Drag");
     img.draggable = false;
     img.setAttribute("data-path", t);
-    if (myColor == color)
+    if (myColor == color && board.winner == -1)
       if ((myColor == 0 && board.white) || (myColor == 1 && !board.white))
         img.addEventListener("mousedown", function(e) {
           dragged = img;
@@ -985,6 +996,9 @@ socket.on("start", function(v) {
   state = setPieces(board);
   inverseClearBasedOn(state);
 
+  draw.disabled = false;
+  resign.disabled = false;
+
   chessboard.style.display = "flex";
   chessboard.style.flexWrap = "wrap";
   chessboard.style.alignItems = "center";
@@ -1014,10 +1028,26 @@ function setListMoves(moves)
   l.scrollTo(0, l.scrollHeight);
 }
 
+function leaveGame(e)
+{
+  socket.emit("giveMeLobbies");
+  leave.removeEventListener("click", leaveGame);
+  leave.style.opacity = 0;
+  leave.disabled = true;
+}
+
 socket.on("move", function(b) {
   board = b;
   svg = [];
   state = setPieces(board);
   inverseClearBasedOn(state);
   setListMoves(board.moves);
+  if (board.winner != -1)
+  {
+    draw.disabled = true;
+    resign.disabled = true;
+    leave.style.opacity = 1;
+    leave.disabled = false;
+    leave.addEventListener("click", leaveGame, false);
+  }
 });

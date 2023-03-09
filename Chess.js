@@ -119,6 +119,8 @@ class Board {
     moves = [];
     pieces = [];
 
+    winner = -1;
+
     white = true;
 
     getPieceAt(pos, color = -1)
@@ -580,6 +582,21 @@ class Board {
                break;
             }
          }
+        var wKings = 0;
+        var bKings = 0;
+        for(var i=0; i < this.pieces.length; i++) {
+            var p = this.pieces[i];
+            if (p.type == 6)
+                if (p.color == 0)
+                    wKings++;
+                else
+                    bKings++;
+        }
+
+        if (wKings == 0)
+            this.winner = 1;
+        if (bKings == 0)
+            this.winner = 0;
     }
 
     makeMove(from, to, opColor, myColor)

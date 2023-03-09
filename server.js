@@ -107,6 +107,16 @@ app.use((req, res, next) => {
   }
 })
 
+function chat(name, msg, g)
+{
+  g.addChat(name, msg);
+
+  g.players.forEach(pp => {
+    var c = {log: g.chat};
+    pp.socket.emit("chat", c);
+  });
+}
+
 function start(g, p)
 {
   console.log("Starting " + g.gameId + " with " + p.username + " vs " + g.op);
@@ -200,12 +210,7 @@ io.on('connection', (socket) => {
         return;
       }
 
-      g.addChat(p.username, c.message);
-
-      g.players.forEach(pp => {
-        var c = {log: g.chat};
-        pp.socket.emit("chat", c);
-      });
+      chat(p.username,c.message, g);
     })
 
     socket.on('name', (v) => {
@@ -366,10 +371,20 @@ io.on('connection', (socket) => {
         
       g.board.white = !g.board.white;
 
+      if (g.board.winner != -1)
+      {
+        chat("Game", g.board.winner == 0 ? "White won!" : "Black won!", g);
+        remove(lobbies, g);
+      }
+
       g.players.forEach(pp => {
         pp.socket.emit("move", g.board);
       });
 
+    });
+
+    socket.on('giveMeLobbies', (v) => {
+      showLobbies(p.socket, p);
     });
 
     socket.on('leave', (v) => {
