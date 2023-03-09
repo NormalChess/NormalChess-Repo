@@ -612,17 +612,9 @@ function inverseClearBasedOn(array)
   }
 }
 
-function drop(touch = false) {
-  if (!touch)
-  {
-    document.removeEventListener("mousemove", mMove, false);
-    document.removeEventListener("mouseup", drop, false);
-  }
-  else
-  {
-    document.ontouchmove = null;
-    document.ontouchend = null;
-  }
+function drop() {
+  document.removeEventListener("mousemove", mMove, false);
+  document.removeEventListener("mouseup", drop, false);
   dragged.style.left = "";
   dragged.style.top = "";
   dragged.style.zIndex = "";
@@ -631,17 +623,17 @@ function drop(touch = false) {
   inverseClearBasedOn(state);
 }    
 
-function mMove(coords) {
+function mMove(event) {
 
   if (!def)
   {
-      posX = coords[0];
-      posY = coords[1];
+      posX = event.clientX;
+      posY = event.clientY;
       def = true;
   }
   dragged.style.zIndex = "99";
-  dragged.style.left = ((coords[0]- posX)) + "px";
-  dragged.style.top = ((coords[1] - posY) - (dragged.clientHeight / 3)) + "px";
+  dragged.style.left = ((event.clientX - posX)) + "px";
+  dragged.style.top = ((event.clientY - posY) - (dragged.clientHeight / 3)) + "px";
 }    
 
 function elementsOverlap(m, el2) {
@@ -656,65 +648,6 @@ function elementsOverlap(m, el2) {
 function movePiece(oldPos, newPos)
 {
   socket.emit("move", {gameId: gameId, piecePos: oldPos, newPos: newPos});
-}
-
-function endDrag(c, coords, touch = false)
-{
-  tile = [];
-  var take = false;
-  for (var i = 0; i < movePos.length; i++) {
-      var m = movePos[i];
-      var el = document.getElementById(m[2]);
-      if (el != null)
-          if (elementsOverlap(coords, el)) {
-              take = m[3];
-              tile = [m[0], m[1]];
-              break;
-          }
-  }
-  for (var ii = 0; ii < movePos.length; ii++) {
-      var mm = movePos[ii];
-      var nid = getFile(mm[0]) + (mm[1] + 1);
-      var newCell = document.getElementById(nid);
-      var color = newCell.getAttribute("data-originalColor");
-      newCell.style.backgroundColor = color;
-  }
-  if (selectedPiece != null)
-      if (tile.length != 0 && selectedPiece.pos != tile)
-          movePiece(selectedPiece.pos, tile);
-  c.style.backgroundColor = previousColor;
-  drop(touch);
-}
-
-function mouseEvent(img, c, pos, touch = false) {
-  dragged = img;
-  var p = getPieceAt(board, pos);
-  if (p == null)
-      return;
-  playable = [];
-  selectedPiece = p;
-  if (touch)
-  {
-    document.addEventListener("touchmove", (e) => {
-      var touchLocation = e.targetTouches[0];
-      mMove([touchLocation.clientX, touchLocation.clientY]);
-    }, false);
-
-    document.addEventListener("touchend", (e) => {
-        var touchLocation = e.targetTouches[0];
-        endDrag(c, [touchLocation.clientX, touchLocation.clientY], true);
-    }, false);
-    return;
-  }
-  document.addEventListener("mousemove", (e) => {
-    mMove([e.clientX, e.clientY]);
-  }, false);
-  document.addEventListener("mouseup", (e) => {
-    endDrag(c, [e.clientX, e.clientY]);
-  }, false);
-  tile = [pos[0], pos[1]];
-  c.style.backgroundColor = "#baca2b";
-  setMoves(board, selectedPiece);
 }
 
 function setSVG(pos, type, color, board)
@@ -733,14 +666,47 @@ function setSVG(pos, type, color, board)
     img.setAttribute("data-path", t);
     if (myColor == color)
       if ((myColor == 0 && board.white) || (myColor == 1 && !board.white))
-      {
         img.addEventListener("mousedown", function(e) {
-          mouseEvent(img, c, pos);
+          dragged = img;
+          var p = getPieceAt(board, pos);
+          if (p == null)
+            return;
+          playable = [];
+          selectedPiece = p;
+          document.addEventListener("mousemove", mMove, false);
+          document.addEventListener("mouseup", (e) => {
+            tile = [];
+            var take = false;
+            for(var i = 0; i < movePos.length; i++)
+            {
+              var m = movePos[i];
+              var el = document.getElementById(m[2]);
+              if (el != null)
+                if (elementsOverlap([e.clientX, e.clientY], el))
+                {
+                    take = m[3];
+                    tile = [m[0], m[1]];
+                    break;
+                }
+            }
+            for(var ii = 0; ii < movePos.length; ii++)
+            {
+              var mm = movePos[ii];
+              var nid = getFile(mm[0]) + (mm[1] + 1);
+              var newCell = document.getElementById(nid);
+              var color = newCell.getAttribute("data-originalColor");
+              newCell.style.backgroundColor = color;
+            }
+            if (selectedPiece != null)
+              if (tile.length != 0 && selectedPiece.pos != tile)
+                movePiece(selectedPiece.pos, tile);
+            c.style.backgroundColor = previousColor;
+            drop();
+          }, false);
+          tile = [pos[0],pos[1]];
+          c.style.backgroundColor = "#baca2b";
+          setMoves(board, selectedPiece);
         }, false);
-        img.addEventListener("touchstart", function(e) {
-          mouseEvent(img, c, pos, true);
-        }, false);
-      }
   }
   else
     c.innerHTML = "";
