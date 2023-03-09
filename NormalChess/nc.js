@@ -818,18 +818,20 @@ function setMoves(b, piece)
 var form = document.getElementById('form');
 var form2 = document.getElementById('lobbyForm');
 
-
 form.addEventListener('submit', function(e) {
+  if (username.length > 0)
+    return;
   let textbox = document.getElementById("textbox");
   e.preventDefault();
   socket.emit('name', {name: textbox.value, id: gameId});
   textbox.value = '';
 });
 
+
 let tbox1 = document.getElementsByClassName("lobbyText")[0];
 let check = document.getElementsByClassName("checkLobby")[0];
 tbox1.addEventListener("keypress", function(event) {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" && gameId.length == 0) {
     if (tbox1.value) {
         socket.emit('create', {name: tbox1.value, isPrivate: check.checked});
         tbox1.value = '';
@@ -837,10 +839,23 @@ tbox1.addEventListener("keypress", function(event) {
   }
 });
 
+let tbox3 = document.getElementById("chatbox");
+tbox3.addEventListener("keypress", function(event) {
+  if (event.key === "Enter" && gameId.length != 0) {
+    if (tbox3.value) {
+        if (tbox3.value.length != 0 && tbox3.value.length < 512)
+        {
+          socket.emit('chat', {message: tbox3.value, gameId: gameId});
+          tbox3.value = '';
+        }
+      }
+  }
+});
+
 let tbox2 = document.getElementsByClassName("codeText")[0];
 tbox2.addEventListener("keypress", function(event) {
   
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && gameId.length == 0) {
       if (tbox2.value) {
           socket.emit('join', tbox2.value);
           tbox2.value = '';
@@ -931,6 +946,13 @@ socket.on("lobby", function(v) {
       bb.disabled = true;
     else
       bb.disabled = false;
+});
+
+socket.on("chat", function(v) {
+  var el = document.getElementById("chatScroll");
+
+  el.innerHTML = v["log"] + "\n<p>   </p>";
+  el.scrollTo(0, el.scrollHeight);
 });
 
 socket.on("start", function(v) {

@@ -37,6 +37,7 @@ class Lobby {
     op = "";
     gameId = "";
     gameName = "";
+    chat = "";
     playerCount = 0;
     playerNames = [];
     players = [];
@@ -55,6 +56,15 @@ class Lobby {
             }
         });
         return b;
+    }
+
+    addChat(name, msg)
+    {
+        let m = msg;
+        m = m.replace(/<[^>]*>?/gm, '');
+
+        // 100% going to get xss'd
+        this.chat += "<p><b>" + name + "</b>: " + msg + "</p>"; 
     }
 
     constructor(name)

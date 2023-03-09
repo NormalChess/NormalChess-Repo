@@ -186,6 +186,27 @@ io.on('connection', (socket) => {
         return true;
       });
     });
+    
+    socket.on('chat', (c) => {
+      if (!p.inLobby)
+      {
+        p.socket.emit("error", "you are not in a lobby");
+        return;
+      }
+      var g = getLobby(c["gameId"]);
+      if (g == null || (!g.containsPlayer(p)))
+      {
+        p.socket.emit("error", "that game was not found");
+        return;
+      }
+
+      g.addChat(p.username, c.message);
+
+      g.players.forEach(pp => {
+        var c = {log: g.chat};
+        pp.socket.emit("chat", c);
+      });
+    })
 
     socket.on('name', (v) => {
         var n = v.name;

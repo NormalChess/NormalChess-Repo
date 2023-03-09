@@ -67,6 +67,9 @@ body {
 	margin-top: 2%;
 	padding-bottom: 1%;
  }
+ 
+ .messages {
+ }
 
  .chat {
 	text-align: left;
@@ -259,6 +262,24 @@ aside,
 	margin: 0 auto;
 	border: 1px solid lightgrey;
 	padding: 5px 15px;
+}
+
+#chatScroll {
+	position: relative;
+	height: 60%;
+	overflow-y: scroll;
+	line-height: 6px;
+	font-size: 14px;
+	margin-top: 2%;
+	margin-bottom: -8%;
+}
+
+#chatInput {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	padding: 1%;
+	padding-left: 4%;
 }
 
 @media (min-width: 1921px) {
