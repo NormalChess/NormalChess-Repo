@@ -11,6 +11,13 @@ const nc = require("./node/normalChess")
 const chess = require("./Chess");
 const { getgid } = require('process');
 var profanity = require('profanity-censor');
+const { RateLimiterMemory } = require('rate-limiter-flexible');
+
+const rateLimiter = new RateLimiterMemory(
+  {
+    points: 10,
+    duration: 2
+  });
 
 // Helper Functions
 
@@ -118,6 +125,17 @@ function chat(name, msg, g)
   });
 }
 
+function rateLimit(socket)
+{
+  var limit = false;
+  rateLimiter.consume(socket.handshake.address).catch((ex) => {
+    socket.emit('error', "you have been kicked for doing stuff way too fast! please refresh.");
+    limit = true;
+    socket.disconnect();
+  });
+  return limit;
+}
+
 function start(g, p)
 {
   console.log("Starting " + g.gameId + " with " + p.username + " vs " + g.op);
@@ -144,7 +162,7 @@ function start(g, p)
 }
 
 io.on('connection', (socket) => {
-    var p = new nc.Player(socket.conn.remoteAddress);
+    var p = new nc.Player(socket.handshake.address);
     p.socket = socket;
     players.push(p);
     p.username = "Guest_" + nc.generateRandomString(8);
@@ -199,22 +217,28 @@ io.on('connection', (socket) => {
     });
     
     socket.on('chat', (c) => {
-      if (!p.inLobby)
-      {
-        p.socket.emit("error", "you are not in a lobby");
-        return;
-      }
-      var g = getLobby(c["gameId"]);
-      if (g == null || (!g.containsPlayer(p)))
-      {
-        p.socket.emit("error", "that game was not found");
-        return;
-      }
+        if (rateLimit(socket))
+          return;
 
-      chat(p.username,profanity.filter(c.message), g);
+        if (!p.inLobby)
+        {
+          p.socket.emit("error", "you are not in a lobby");
+          return;
+        }
+        var g = getLobby(c["gameId"]);
+        if (g == null || (!g.containsPlayer(p)))
+        {
+          p.socket.emit("error", "that game was not found");
+          return;
+        }
+
+        chat(p.username,profanity.filter(c.message), g);
     })
 
     socket.on('name', (v) => {
+        if (rateLimit(socket))
+          return;
+        
         var n = v.name;
         if (n.length > 16)
           n = n.substring(0,16);
@@ -248,10 +272,15 @@ io.on('connection', (socket) => {
             pp.socket.emit("lobby", {lobby: lo});
           });
         }
+
+
     });
 
     
     socket.on('join', (v) => {
+        if (rateLimit(socket))
+          return;
+      
         if (p.inLobby)
           return;
         var g = getLobby(v);
@@ -284,6 +313,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('start', (v) => {
+        if (rateLimit(socket))
+          return;
+      
       if (!p.inLobby)
       {
         p.socket.emit("error", "you are not in a lobby");
@@ -309,6 +341,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('move', (v) => {
+        if (rateLimit(socket))
+          return;
+      
       if (!p.inLobby)
       {
         p.socket.emit("error", "you are not in a lobby");
@@ -386,10 +421,16 @@ io.on('connection', (socket) => {
     });
 
     socket.on('giveMeLobbies', (v) => {
+        if (rateLimit(socket))
+          return;
+      
       showLobbies(p.socket, p);
     });
 
     socket.on('leave', (v) => {
+        if (rateLimit(socket))
+          return;
+      
       if (!p.inLobby)
         return;
       var g = getLobby(v);
@@ -430,6 +471,9 @@ io.on('connection', (socket) => {
 
 
     socket.on('create', (v) => {
+        if (rateLimit(socket))
+          return;
+        
         if (p.inLobby)
           return;
         var name = v["name"].replace(/<[^>]*>?/gm, '');

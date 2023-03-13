@@ -129,16 +129,16 @@ function getAvaliableMoves(b, p)
                 }
                 if (p.color == 0)
                 {
-                    if (checkPiece(b,[p.pos[0] - 1, p.pos[1] + 1]))
+                    if (checkPiece(b,[p.pos[0] - 1, p.pos[1] + 1], opColor))
                         m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
-                    if (checkPiece(b,[p.pos[0] + 1, p.pos[1] + 1]))
+                    if (checkPiece(b,[p.pos[0] + 1, p.pos[1] + 1], opColor))
                         m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
                 }
                 else
                 {
-                    if (checkPiece(b,[p.pos[0] - 1, p.pos[1] - 1]))
+                    if (checkPiece(b,[p.pos[0] - 1, p.pos[1] - 1], opColor))
                         m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
-                    if (checkPiece(b,[p.pos[0] + 1, p.pos[1] - 1]))
+                    if (checkPiece(b,[p.pos[0] + 1, p.pos[1] - 1], opColor))
                         m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
                 }
 

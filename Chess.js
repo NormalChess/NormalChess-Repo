@@ -170,16 +170,16 @@ class Board {
                 }
                 if (p.color == 0)
                 {
-                    if (this.checkPiece([p.pos[0] - 1, p.pos[1] + 1]))
+                    if (this.checkPiece([p.pos[0] - 1, p.pos[1] + 1], opColor))
                         m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
-                    if (this.checkPiece([p.pos[0] + 1, p.pos[1] + 1]))
+                    if (this.checkPiece([p.pos[0] + 1, p.pos[1] + 1], opColor))
                         m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
                 }
                 else
                 {
-                    if (this.checkPiece([p.pos[0] - 1, p.pos[1] - 1]))
+                    if (this.checkPiece([p.pos[0] - 1, p.pos[1] - 1], opColor))
                         m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
-                    if (this.checkPiece([p.pos[0] + 1, p.pos[1] - 1]))
+                    if (this.checkPiece([p.pos[0] + 1, p.pos[1] - 1], opColor))
                         m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
                 }
 
