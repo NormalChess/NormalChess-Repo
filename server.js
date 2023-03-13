@@ -10,6 +10,7 @@ const fs = require('fs')
 const nc = require("./node/normalChess")
 const chess = require("./Chess");
 const { getgid } = require('process');
+var profanity = require('profanity-censor');
 
 // Helper Functions
 
@@ -210,7 +211,7 @@ io.on('connection', (socket) => {
         return;
       }
 
-      chat(p.username,c.message, g);
+      chat(p.username,profanity.filter(c.message), g);
     })
 
     socket.on('name', (v) => {
@@ -219,6 +220,7 @@ io.on('connection', (socket) => {
           n = n.substring(0,16);
         if (n.length != 0)
           p.username = n.replace(/<[^>]*>?/gm, '');
+        p.username = profanity.filter(p.username);
         console.log(p.username + ' is now playing!');
         p.lookingForLobby = true;
         if (v.id.length == 0)
