@@ -107,10 +107,10 @@ app.use((req, res, next) => {
         if (fs.existsSync(f))
           res.sendFile(f);
         else
-          res.status(404).send("<html><head><title>Normal Chess</title></head><body><h1>404</h1><h2>I cannot find that file</h2><p>Go back... <a href='./index.html'>maybe</a>?</p></body></html>");
+          res.status(404).send("<html><head><title>Normal Chess</title></head><body><h1>404</h1><h2>I cannot find that file</h2><p>Go back... <a href='./'>maybe</a>?</p></body></html>");
         break;
       }
-      res.status(404).send("<html><head><title>Normal Chess</title></head><body><h1>404</h1><h2>I cannot find that file</h2><p>Go back... <a href='./index.html'>maybe</a>?</p></body></html>");
+      res.status(404).send("<html><head><title>Normal Chess</title></head><body><h1>404</h1><h2>I cannot find that file</h2><p>Go back... <a href='./'>maybe</a>?</p></body></html>");
       break;
   }
 })
