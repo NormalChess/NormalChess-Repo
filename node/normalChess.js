@@ -46,6 +46,9 @@ class Lobby {
     isPrivate = false;
     board = null;
 
+    colorPromotion = -1;
+    pieceToPromote = null;
+
     containsPlayer(p)
     {
         var b = false;
@@ -63,8 +66,11 @@ class Lobby {
         let m = msg;
         m = m.replace(/<[^>]*>?/gm, '');
 
+        let rm = "<p><b>" + name + "</b>: " + msg + "</p>";
+
         // 100% going to get xss'd
-        this.chat += "<p><b>" + name + "</b>: " + msg + "</p>"; 
+        this.chat += rm;
+        return  rm;
     }
 
     constructor(name)

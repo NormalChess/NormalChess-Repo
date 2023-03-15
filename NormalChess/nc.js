@@ -7,7 +7,11 @@ function createNotification(message) {
   // Check if there's already a notification present
   const existingNotification = document.querySelector('.notification');
   if (existingNotification) {
-    existingNotification.remove();
+    if (message != existingNotification.textContent)
+      setTimeout(() => {
+        createNotification(message);
+      }, 5500);
+    return;
   }
 
   // Create the notification container
@@ -101,6 +105,8 @@ function checkPiece(board, cords, color)
     {
         return getPieceAt(board, cords, color) != null;
     }
+
+
 
 function getAvaliableMoves(b, p)
     {
@@ -928,7 +934,7 @@ socket.on("lobby", function(v) {
 socket.on("chat", function(v) {
   var el = document.getElementById("chatScroll");
 
-  el.innerHTML = v["log"] + "\n<p>   </p>";
+  el.innerHTML += v;
   el.scrollTo(0, el.scrollHeight);
 });
 
@@ -1050,4 +1056,9 @@ socket.on("move", function(b) {
     leave.disabled = false;
     leave.addEventListener("click", leaveGame, false);
   }
+});
+
+socket.on("disconnect", function(v) {
+  console.error("Disconnected from server.");
+  createNotification("Disconnected from the server.");
 });

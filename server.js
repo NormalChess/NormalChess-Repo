@@ -117,13 +117,20 @@ app.use((req, res, next) => {
   }
 })
 
+function schat(name, msg, g, p)
+{
+  let s = g.addChat(name, msg);
+
+  p.socket.emit("chat", s);
+}
+
 function chat(name, msg, g)
 {
-  g.addChat(name, msg);
+  let s = g.addChat(name, msg);
 
   g.players.forEach(pp => {
     var c = {log: g.chat};
-    pp.socket.emit("chat", c);
+    pp.socket.emit("chat", s);
   });
 }
 
@@ -187,28 +194,19 @@ io.on('connection', (socket) => {
       lobbies.every(v => {
         var shouldDelete = false;
         v.players.every(pp => {
-            if (p.ip == v.host.ip && v.host.username == p.username)
-            {
-                log("Removed Game", v.gameId + ", lack of a host.");
-                shouldDelete = true;
-                return false;
-            }
-            else if (pp.ip == p.ip && pp.username == p.username)
-            {
-              log("Removed Player from Game", p.username + " from " + v.gameId);
-              remove(v.players, pp);
-              v.op = "";
-              v.playerNames = [];
-              v.players.forEach(c => {
-                v.playerNames.push(c.username);
-              });
-              v.playerCount--;
-              v.players.forEach(pp => {
-                pp.socket.emit("error", p.username + " left");
-                pp.lookingForLobby = false;
-                pp.socket.emit('lobby', {lobby: {isHost: pp.ip == v.host.ip && v.host.username == p.username, gameName: v.gameName, link: "http://normalchess.com/?challenge=" + v.gameId, gameId: v.gameId, playerCount: v.playerCount, players: v.playerNames}});
-              });
-            }
+            log("Removed Player from Game", p.username + " from " + v.gameId);
+            remove(v.players, pp);
+            v.op = "";
+            v.playerNames = [];
+            v.players.forEach(c => {
+              v.playerNames.push(c.username);
+            });
+            v.playerCount--;
+            v.players.forEach(pp => {
+              pp.socket.emit("error", p.username + " left");
+              pp.lookingForLobby = false;
+              pp.socket.emit('lobby', {lobby: {isHost: pp.ip == v.host.ip && v.host.username == p.username, gameName: v.gameName, link: "http://normalchess.com/?challenge=" + v.gameId, gameId: v.gameId, playerCount: v.playerCount, players: v.playerNames}});
+            });
             return true;
         });
         if (shouldDelete)
@@ -253,6 +251,42 @@ io.on('connection', (socket) => {
         {
           p.socket.emit("error", "that game was not found");
           return;
+        }
+
+        if (g.colorPromotion != -1)
+        {
+          if (g.colorPromotion == 0 && p.isWhite)
+          {
+            switch(c.message.toLowerCase())
+            {
+              case "king":
+                g.pieceToPromote.type = 6;
+                break;
+              case "queen":
+                g.pieceToPromote.type = 5;
+                break;
+              case "rook":
+                g.pieceToPromote.type = 4;
+                break;
+              case "bishop":
+                g.pieceToPromote.type = 2;
+                break;
+              case "knight":
+                g.pieceToPromote.type = 3;
+                break;
+              default:
+                schat("Server", "That piece isn't on the list. (you have to promote a piece)", g, p);
+                return;
+            }
+            schat("Server", "Promoted!", g, p);
+            g.colorPromotion = -1;
+
+            g.players.forEach(pp => {
+              pp.socket.emit("move", g.board);
+            });
+
+            return;
+          }
         }
 
         chat(p.username,profanity.filter(c.message), g);
@@ -432,12 +466,20 @@ io.on('connection', (socket) => {
         g.board.makeMove(ppos, newPos, 0, 1);
         
       g.board.white = !g.board.white;
-
+      
       if (g.board.winner != -1)
       {
         chat("Game", g.board.winner == 0 ? "White won!" : "Black won!", g);
         log("Game Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
         remove(lobbies, g);
+      }
+
+      if ((newPos[1] == 7 || newPos[1] == 0) && piece.type == 1)
+      {
+        schat("Server","Please type what ever you want to promote to. King, Queen, Rook, Bishop, Knight. It is case insensitive.", g, p);
+        g.colorPromotion = piece.color;
+        g.pieceToPromote = piece;
+        return;
       }
 
       g.players.forEach(pp => {
