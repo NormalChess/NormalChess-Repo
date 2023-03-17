@@ -1,5 +1,3 @@
-var allowMoreThanOneIP = false;
-
 const express = require('express');
 var bodyParser = require('body-parser')
 var app = express()
@@ -14,6 +12,11 @@ const chess = require("./Chess");
 const { getgid } = require('process');
 var profanity = require('profanity-censor');
 const { RateLimiterMemory } = require('rate-limiter-flexible');
+
+const yaml = require('js-yaml');
+
+const cfg = yaml.load(fs.readFileSync(__dirname + '\\config.yml', 'utf8')); 
+
 
 const rateLimiter = new RateLimiterMemory(
   {
@@ -176,7 +179,7 @@ function start(g, p)
 }
 
 io.on('connection', (socket) => {
-    if (getPlayer(socket.handshake.address) != null && !allowMoreThanOneIP)
+    if (getPlayer(socket.handshake.address) != null && !cfg.sameIpConnections)
     {
       socket.emit("nick");
       socket.emit("error", "this server is configured to only have one player per ip. Sorry!");
@@ -566,6 +569,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(80, () => {
-  log("Server", "Listening on *:80");
+server.listen(cfg.port, () => {
+  log("Server", "Listening on *:" + cfg.port);
 });

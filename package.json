@@ -2,6 +2,7 @@
   "dependencies": {
     "dependencies": "^0.0.1",
     "express": "^4.18.2",
+    "js-yaml": "^4.1.0",
     "profanity-censor": "^1.0.5",
     "rate-limiter-flexible": "^2.4.1",
     "simple-fetch": "^2.2.3",
