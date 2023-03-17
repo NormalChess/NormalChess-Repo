@@ -263,30 +263,44 @@ class Board {
                 break;
             case 3: // knight
                 // too lazy to look for a cleaner solution
-                var x1 = [p.pos[0] - 1, p.pos[1] + 2];
-                x1.push(this.checkPiece(x1, opColor));
-                var x2 = [p.pos[0] - 2, p.pos[1] + 1];
-                x2.push(this.checkPiece(x2, opColor));
-                m.push(x1);
-                m.push(x2);
-                x1 = [p.pos[0] + 1, p.pos[1] + 2];
-                x1.push(this.checkPiece(x1, opColor));
-                x2 = [p.pos[0] + 2, p.pos[1] + 1];
-                x2.push(this.checkPiece(x2, opColor));
-                m.push(x1);
-                m.push(x2);
-                x1 = [p.pos[0] - 1, p.pos[1] - 2];
-                x1.push(this.checkPiece(x1, opColor));
-                x2 = [p.pos[0] - 2, p.pos[1] - 1];
-                x2.push(this.checkPiece(x2, opColor));
-                m.push(x1);
-                m.push(x2);
-                x1 = [p.pos[0] + 1, p.pos[1] - 2];
-                x1.push(this.checkPiece(x1, opColor));
-                x2 = [p.pos[0] + 2, p.pos[1] - 1];
-                x2.push(this.checkPiece(x2, opColor));
-                m.push(x1);
-                m.push(x2);
+                var x1 = [];
+                var x2 = [];
+                if (!this.checkPiece([p.pos[0] - 1, p.pos[1] + 1]) && !this.checkPiece([p.pos[0] - 1, p.pos[1]]))
+                {
+                    x1 = [p.pos[0] - 1, p.pos[1] + 2];
+                    x1.push(this.checkPiece(x1, opColor));
+                    x2 = [p.pos[0] - 2, p.pos[1] + 1];
+                    x2.push(this.checkPiece(x2, opColor));
+                    m.push(x1);
+                    m.push(x2);
+                }
+                if (!this.checkPiece([p.pos[0] + 1, p.pos[1] + 1]) && !this.checkPiece([p.pos[0] + 1, p.pos[1]]))
+                {
+                    x1 = [p.pos[0] + 1, p.pos[1] + 2];
+                    x1.push(this.checkPiece(x1, opColor));
+                    x2 = [p.pos[0] + 2, p.pos[1] + 1];
+                    x2.push(this.checkPiece(x2, opColor));
+                    m.push(x1);
+                    m.push(x2);
+                }
+                if (!this.checkPiece([p.pos[0] - 1, p.pos[1] - 1]) && !this.checkPiece([p.pos[0] - 1, p.pos[1]]))
+                {
+                    x1 = [p.pos[0] - 1, p.pos[1] - 2];
+                    x1.push(this.checkPiece(x1, opColor));
+                    x2 = [p.pos[0] - 2, p.pos[1] - 1];
+                    x2.push(this.checkPiece(x2, opColor));
+                    m.push(x1);
+                    m.push(x2);
+                }
+                if (!this.checkPiece([p.pos[0] + 1, p.pos[1] - 1]) && !this.checkPiece([p.pos[0] + 1, p.pos[1]]))
+                {
+                    x1 = [p.pos[0] + 1, p.pos[1] - 2];
+                    x1.push(this.checkPiece(x1, opColor));
+                    x2 = [p.pos[0] + 2, p.pos[1] - 1];
+                    x2.push(this.checkPiece(x2, opColor));
+                    m.push(x1);
+                    m.push(x2);
+                }
                 break;
             case 4: // Rook
                 var found = [false, false, false, false];
