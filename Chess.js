@@ -33,7 +33,7 @@ class Move {
         return file;
     }
 
-    static convertPieceToName(type, moveType, from, pos)
+    static convertPieceToName(type, moveType, from, pos, en)
     {
         switch(moveType)
         {
@@ -44,6 +44,8 @@ class Move {
                     var f = Move.getFile(m);
                     var lf = Move.getFile(from);
                     var t = f + (m[1] + 1);
+                    if (en)
+                        t = lf + "->" + t;
                     if (c)
                     {
                         if (type != 1) // pawn has a different notation
@@ -90,9 +92,9 @@ class Move {
 
     mName = "";
     pos = [];
-    constructor(_from, _pos,_type, _moveType, _capture)
+    constructor(_from, _pos,_type, _moveType, _capture, en)
     {
-        this.mName = Move.convertPieceToName(_type, _moveType, _from, _pos);
+        this.mName = Move.convertPieceToName(_type, _moveType, _from, _pos, en);
         this.pos = _pos;
     }
 }
@@ -179,12 +181,12 @@ class Board {
                     if (op != null)
                     {
                       if (op.moveLifetime == 1)
-                        m.push([op.pos[0], op.pos[1] + 1, true]);
+                        m.push([op.pos[0], op.pos[1] + 1, true, true]);
                     }
                     if (oop != null)
                     {
                       if (oop.moveLifetime == 1)
-                        m.push([oop.pos[0], oop.pos[1] + 1, true]);
+                        m.push([oop.pos[0], oop.pos[1] + 1, true, true]);
                     }
                 }
                 else
@@ -198,12 +200,12 @@ class Board {
                     if (op != null)
                     {
                       if (op.moveLifetime == 1)
-                        m.push([op.pos[0], op.pos[1] - 1, true]);
+                        m.push([op.pos[0], op.pos[1] - 1, true, true]);
                     }
                     if (oop != null)
                     {
                       if (oop.moveLifetime == 1)
-                        m.push([oop.pos[0], oop.pos[1] - 1, true]);
+                        m.push([oop.pos[0], oop.pos[1] - 1, true, true]);
                     }
                 }
 
@@ -637,7 +639,7 @@ class Board {
             this.winner = 0;
     }
 
-    makeMove(from, to, opColor, myColor)
+    makeMove(from, to, opColor, myColor, enpassant)
     {
         var piece = this.getPieceAt(to, opColor);
         var fpiece = this.getPieceAt(from, myColor);
@@ -651,7 +653,7 @@ class Board {
         var t = to;
         to.push(take);
 
-        this.moves.push(new Move(from, [t], fpiece.type, 0, take));
+        this.moves.push(new Move(from, [t], fpiece.type, 0, take, enpassant));
         fpiece.pos = to;
         fpiece.moveLifetime++;
     }

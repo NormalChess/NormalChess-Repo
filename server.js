@@ -449,9 +449,12 @@ io.on('connection', (socket) => {
 
       var goodMove = false;
 
+      var tm = null;
+
       moves.every(m => {
         if (m[0] == newPos[0] && m[1] == newPos[1])
         {
+          tm = m;
           goodMove = true;
           return false;
         }
@@ -464,9 +467,9 @@ io.on('connection', (socket) => {
         return;
       }
       if (g.board.white)
-        g.board.makeMove(ppos, newPos, 1, 0);
+        g.board.makeMove(ppos, newPos, 1, 0, tm[3]);
       else
-        g.board.makeMove(ppos, newPos, 0, 1);
+        g.board.makeMove(ppos, newPos, 0, 1, tm[3]);
         
       g.board.white = !g.board.white;
       
