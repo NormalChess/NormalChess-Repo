@@ -174,10 +174,15 @@ class Board {
                 }
                 if (p.color == 0)
                 {
-                    if (this.checkPiece([p.pos[0] - 1, p.pos[1] + 1], opColor))
-                        m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
-                    if (this.checkPiece([p.pos[0] + 1, p.pos[1] + 1], opColor))
-                        m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
+                    for (let i = 0; i < 8; i++) {
+                        if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] + (1 + i)], opColor))
+                            if (!this.checkPiece([p.pos[0] - (2 * i), p.pos[1] + (2 * i)]))
+                              m.push([p.pos[0] - (2 * i),p.pos[1] + (2 * i), true, false]);
+                        if (this.checkPiece([p.pos[0] + (1 + i), p.pos[1] + (1 + i)], opColor))
+                            if (!this.checkPiece([p.pos[0] + (2 * i), p.pos[1] + (2 * i)]))
+                              m.push([p.pos[0] + (2 * i),p.pos[1] + (2 * i), true, false]);
+                    }
+                    
                     var op = this.getPieceAt([p.pos[0] - 1, p.pos[1]], opColor);
                     var oop = this.getPieceAt([p.pos[0] + 1, p.pos[1]], opColor);
                     if (op != null)
@@ -193,10 +198,15 @@ class Board {
                 }
                 else
                 {
-                    if (this.checkPiece([p.pos[0] - 1, p.pos[1] - 1], opColor))
-                        m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
-                    if (this.checkPiece([p.pos[0] + 1, p.pos[1] - 1], opColor))
-                        m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
+                    for (let i = 0; i < 8; i++) {
+                        if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] - (1 + i)], opColor))
+                            if (!this.checkPiece([p.pos[0] - (2 * i), p.pos[1] - (2 * i)]))
+                              m.push([p.pos[0] - (2 * i),p.pos[1] - (2 * i), true, false]);
+                        if (this.checkPiece([p.pos[0] + (1 + i), p.pos[1] - (1 + i)], opColor))
+                            if (!this.checkPiece([p.pos[0] + (2 * i), p.pos[1] - (2 * i)]))
+                              m.push([p.pos[0] + (2 * i),p.pos[1] - (2 * i), true, false]);
+                    }
+
                     var op = this.getPieceAt([p.pos[0] - 1, p.pos[1]], opColor);
                     var oop = this.getPieceAt([p.pos[0] + 1, p.pos[1]], opColor);
                     if (op != null)

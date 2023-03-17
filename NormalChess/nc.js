@@ -137,10 +137,15 @@ function getAvaliableMoves(b, p)
                 }
                 if (p.color == 0)
                 {
-                    if (checkPiece(b,[p.pos[0] - 1, p.pos[1] + 1], opColor))
-                        m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
-                    if (checkPiece(b,[p.pos[0] + 1, p.pos[1] + 1], opColor))
-                        m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
+                    for (let i = 0; i < 8; i++) {
+                      if (checkPiece(b,[p.pos[0] - (1 + i), p.pos[1] + (1 + i)], opColor))
+                          if (!checkPiece(b,[p.pos[0] - (2 * i), p.pos[1] + (2 * i)]))
+                            m.push([p.pos[0] - (2 * i),p.pos[1] + (2 * i), true, false]);
+                      if (checkPiece(b,[p.pos[0] + (1 + i), p.pos[1] + (1 + i)], opColor))
+                          if (!checkPiece(b,[p.pos[0] + (2 * i), p.pos[1] + (2 * i)]))
+                            m.push([p.pos[0] + (2 * i),p.pos[1] + (2 * i), true, false]);
+                    }
+
                     var op = getPieceAt(b, [p.pos[0] - 1, p.pos[1]], opColor);
                     var oop = getPieceAt(b, [p.pos[0] + 1, p.pos[1]], opColor);
                     if (op != null)
@@ -156,10 +161,14 @@ function getAvaliableMoves(b, p)
                 }
                 else
                 {
-                    if (checkPiece(b,[p.pos[0] - 1, p.pos[1] - 1], opColor))
-                        m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
-                    if (checkPiece(b,[p.pos[0] + 1, p.pos[1] - 1], opColor))
-                        m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
+                    for (let i = 0; i < 8; i++) {
+                      if (checkPiece(b,[p.pos[0] - (1 + i), p.pos[1] - (1 + i)], opColor))
+                          if (!checkPiece(b,[p.pos[0] - (2 * i), p.pos[1] - (2 * i)]))
+                            m.push([p.pos[0] - (2 * i),p.pos[1] - (2 * i), true, false]);
+                      if (checkPiece(b,[p.pos[0] + (1 + i), p.pos[1] - (1 + i)], opColor))
+                          if (!checkPiece(b,[p.pos[0] + (2 * i), p.pos[1] - (2 * i)]))
+                            m.push([p.pos[0] + (2 * i),p.pos[1] - (2 * i), true, false]);
+                    }
                     var op = getPieceAt(b, [p.pos[0] - 1, p.pos[1]], opColor);
                     var oop = getPieceAt(b, [p.pos[0] + 1, p.pos[1]], opColor);
                     if (op != null)
