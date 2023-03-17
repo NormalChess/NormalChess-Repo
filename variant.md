@@ -13,7 +13,7 @@ The pawn is still a simple pawn, but with three changes.
 
 > En Passant
 
-The pawn can en passant every piece, and it does not take the piece it en passants.
+The pawn can en passant every piece, and it does not take the piece it en passants. (unless a piece is on the en passant square it will move too, then it will take that piece)
 
 > King Promotion
 
