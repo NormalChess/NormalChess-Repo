@@ -158,10 +158,12 @@ class Board {
                     {
                         m.push([p.pos[0],p.pos[1] + 1, false]);
                         m.push([p.pos[0],p.pos[1] + 2, false]);
-                        return m;
                     }
-                    m.push([p.pos[0],p.pos[1] - 1, false]);
-                    m.push([p.pos[0],p.pos[1] - 2, false]);
+                    else
+                    {
+                        m.push([p.pos[0],p.pos[1] - 1, false]);
+                        m.push([p.pos[0],p.pos[1] - 2, false]);
+                    }
                 }
                 else
                 {
