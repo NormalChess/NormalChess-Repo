@@ -11,11 +11,11 @@ There are no checks in Normal Chess (definitely not because I don't want to prog
 
 The pawn is still a simple pawn, but with three changes. 
 
-> En Passant Passant Passant Passant
+> En Passant
 
-The pawn can now surf "en passant," an example can be found here:
+The pawn can en passant every piece, and it does not take the piece it en passants. (unless a piece is on the en passant square it will move too, then it will take that piece)
 
-![surfing en passant](https://user-images.githubusercontent.com/123427599/218216917-7f6c961a-af86-4ffc-8c8d-45232f82da4f.png)
+En Passants are also only given if the piece who is going to be en passanted has moved once. En Passants can be done at any time, even if a new move has started.
 
 > King Promotion
 
