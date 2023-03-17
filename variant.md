@@ -15,6 +15,8 @@ The pawn is still a simple pawn, but with three changes.
 
 The pawn can en passant every piece, and it does not take the piece it en passants. (unless a piece is on the en passant square it will move too, then it will take that piece)
 
+En Passants are also only given if the piece who is going to be en passanted has moved once. En Passants can be done at any time, even if a new move has started.
+
 > King Promotion
 
 The pawn can now promote to a king. The enemy has to capture both kings to win.
