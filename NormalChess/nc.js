@@ -139,6 +139,18 @@ function getAvaliableMoves(b, p)
                         m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
                     if (checkPiece(b,[p.pos[0] + 1, p.pos[1] + 1], opColor))
                         m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
+                    var op = getPieceAt(b, [p.pos[0] - 1, p.pos[1]], opColor);
+                    var oop = getPieceAt(b, [p.pos[0] + 1, p.pos[1]], opColor);
+                    if (op != null)
+                    {
+                      if (op.moveLifetime == 1)
+                        m.push([op.pos[0], op.pos[1] + 1, true, true]);
+                    }
+                    if (oop != null)
+                    {
+                      if (oop.moveLifetime == 1)
+                        m.push([oop.pos[0], oop.pos[1] + 1, true, true]);
+                    }
                 }
                 else
                 {
@@ -146,6 +158,18 @@ function getAvaliableMoves(b, p)
                         m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
                     if (checkPiece(b,[p.pos[0] + 1, p.pos[1] - 1], opColor))
                         m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
+                    var op = getPieceAt(b, [p.pos[0] - 1, p.pos[1]], opColor);
+                    var oop = getPieceAt(b, [p.pos[0] + 1, p.pos[1]], opColor);
+                    if (op != null)
+                    {
+                      if (op.moveLifetime == 1)
+                        m.push([op.pos[0], op.pos[1] - 1, true, true]);
+                    }
+                    if (oop != null)
+                    {
+                      if (oop.moveLifetime == 1)
+                        m.push([oop.pos[0], oop.pos[1] - 1, true, true]);
+                    }
                 }
 
             break;
@@ -795,6 +819,8 @@ function setMoves(b, piece)
     if (m[2])
     {
       mo[2] = id + "Drag";
+      if (m[3])
+        mo[2] = id;
       mo[3] = true;
       c.style.backgroundColor = "#ca2b2b";
     }

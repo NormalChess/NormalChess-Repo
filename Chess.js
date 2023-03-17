@@ -174,6 +174,18 @@ class Board {
                         m.push([p.pos[0] - 1,p.pos[1] + 1, true]);
                     if (this.checkPiece([p.pos[0] + 1, p.pos[1] + 1], opColor))
                         m.push([p.pos[0] + 1,p.pos[1] + 1, true]);
+                    var op = this.getPieceAt([p.pos[0] - 1, p.pos[1]], opColor);
+                    var oop = this.getPieceAt([p.pos[0] + 1, p.pos[1]], opColor);
+                    if (op != null)
+                    {
+                      if (op.moveLifetime == 1)
+                        m.push([op.pos[0], op.pos[1] + 1, true]);
+                    }
+                    if (oop != null)
+                    {
+                      if (oop.moveLifetime == 1)
+                        m.push([oop.pos[0], oop.pos[1] + 1, true]);
+                    }
                 }
                 else
                 {
@@ -181,6 +193,18 @@ class Board {
                         m.push([p.pos[0] - 1,p.pos[1] - 1, true]);
                     if (this.checkPiece([p.pos[0] + 1, p.pos[1] - 1], opColor))
                         m.push([p.pos[0] + 1,p.pos[1] - 1, true]);
+                    var op = this.getPieceAt([p.pos[0] - 1, p.pos[1]], opColor);
+                    var oop = this.getPieceAt([p.pos[0] + 1, p.pos[1]], opColor);
+                    if (op != null)
+                    {
+                      if (op.moveLifetime == 1)
+                        m.push([op.pos[0], op.pos[1] - 1, true]);
+                    }
+                    if (oop != null)
+                    {
+                      if (oop.moveLifetime == 1)
+                        m.push([oop.pos[0], oop.pos[1] - 1, true]);
+                    }
                 }
 
             break;
