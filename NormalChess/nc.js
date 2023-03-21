@@ -137,13 +137,17 @@ function getAvaliableMoves(b, p)
                 }
                 if (p.color == 0)
                 {
+  
                     for (let i = 0; i < 8; i++) {
+                      var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
+                      var c2 = [p.pos[0] - (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
+
                       if (checkPiece(b,[p.pos[0] - (1 + i), p.pos[1] + (1 + i)], opColor))
-                          if (!checkPiece(b,[p.pos[0] - (2 * i), p.pos[1] + (2 * i)]))
-                            m.push([p.pos[0] - (2 * i),p.pos[1] + (2 * i), true, false]);
+                          if (!checkPiece(b,c))
+                            m.push(c);
                       if (checkPiece(b,[p.pos[0] + (1 + i), p.pos[1] + (1 + i)], opColor))
-                          if (!checkPiece(b,[p.pos[0] + (2 * i), p.pos[1] + (2 * i)]))
-                            m.push([p.pos[0] + (2 * i),p.pos[1] + (2 * i), true, false]);
+                          if (!checkPiece(b,c2))
+                            m.push(c2);
                     }
 
                     var op = getPieceAt(b, [p.pos[0] - 1, p.pos[1]], opColor);
@@ -162,12 +166,15 @@ function getAvaliableMoves(b, p)
                 else
                 {
                     for (let i = 0; i < 8; i++) {
+                      var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
+                      var c2 = [p.pos[0] - (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
+
                       if (checkPiece(b,[p.pos[0] - (1 + i), p.pos[1] - (1 + i)], opColor))
-                          if (!checkPiece(b,[p.pos[0] - (2 * i), p.pos[1] - (2 * i)]))
-                            m.push([p.pos[0] - (2 * i),p.pos[1] - (2 * i), true, false]);
+                          if (!checkPiece(b,c))
+                            m.push(c);
                       if (checkPiece(b,[p.pos[0] + (1 + i), p.pos[1] - (1 + i)], opColor))
-                          if (!checkPiece(b,[p.pos[0] + (2 * i), p.pos[1] - (2 * i)]))
-                            m.push([p.pos[0] + (2 * i),p.pos[1] - (2 * i), true, false]);
+                          if (!checkPiece(b,c2))
+                            m.push(c2);
                     }
                     var op = getPieceAt(b, [p.pos[0] - 1, p.pos[1]], opColor);
                     var oop = getPieceAt(b, [p.pos[0] + 1, p.pos[1]], opColor);
@@ -711,9 +718,9 @@ function elementsOverlap(m, el2) {
     m[1] > domRect2.bottom)
 }
 
-function movePiece(oldPos, newPos)
+function movePiece(oldPos, newPos, pawnTake)
 {
-  socket.emit("move", {gameId: gameId, piecePos: oldPos, newPos: newPos});
+  socket.emit("move", {gameId: gameId, piecePos: oldPos, newPos: newPos, pTake: pawnTake});
 }
 
 function setSVG(pos, type, color, board)
@@ -755,9 +762,12 @@ function setSVG(pos, type, color, board)
                     break;
                 }
             }
+            var correctMove = null;
             for(var ii = 0; ii < movePos.length; ii++)
             {
               var mm = movePos[ii];
+              correctMove = mm;
+
               var nid = getFile(mm[0]) + (mm[1] + 1);
               var newCell = document.getElementById(nid);
               var color = newCell.getAttribute("data-originalColor");
@@ -765,7 +775,7 @@ function setSVG(pos, type, color, board)
             }
             if (selectedPiece != null)
               if (tile.length != 0 && selectedPiece.pos != tile)
-                movePiece(selectedPiece.pos, tile);
+                movePiece(selectedPiece.pos, tile, correctMove[4]);
             c.style.backgroundColor = previousColor;
             drop();
           }, false);
@@ -831,7 +841,12 @@ function setMoves(b, piece)
     {
       mo[2] = id + "Drag";
       if (m[3])
+      {
         mo[2] = id;
+        mo[4] = true;
+      }
+      else
+        mo[4] = false;
       mo[3] = true;
       c.style.backgroundColor = "#ca2b2b";
     }

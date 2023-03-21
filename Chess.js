@@ -145,6 +145,28 @@ class Board {
         return this.getPieceAt(cords, color) != null;
     }
 
+    getAllTakenPiecesFromPawn(p, direction, white = true)
+    {
+        var pieces = [];
+        for (let i = 0; i < 8; i++) {
+            var t = (1 + i);
+            if (direction < 0)
+                t = -t;
+            
+
+            var np = this.getPieceAt([p.pos[0] + t, white ? p.pos[1] + (1 + i) : p.pos[1] - (1 + i)], white ? 1 : 0);
+            if (np != null)
+            {
+                var coords = [np.pos[0] + (direction < 0 ? -1 : 1), white ? np.pos[1] + 1 : np.pos[1] - 1];
+                if (!this.checkPiece(coords, white ? 1 : 0))
+                    pieces.push(np);
+                else
+                    break;
+            }
+        }
+        return pieces;
+    }
+
     getAvaliableMoves(p, pColor = true)
     {
         var m = [];
@@ -175,12 +197,15 @@ class Board {
                 if (p.color == 0)
                 {
                     for (let i = 0; i < 8; i++) {
-                        if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] + (1 + i)], opColor))
-                            if (!this.checkPiece([p.pos[0] - (2 * i), p.pos[1] + (2 * i)]))
-                              m.push([p.pos[0] - (2 * i),p.pos[1] + (2 * i), true, false]);
-                        if (this.checkPiece([p.pos[0] + (1 + i), p.pos[1] + (1 + i)], opColor))
-                            if (!this.checkPiece([p.pos[0] + (2 * i), p.pos[1] + (2 * i)]))
-                              m.push([p.pos[0] + (2 * i),p.pos[1] + (2 * i), true, false]);
+                      var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
+                      var c2 = [p.pos[0] - (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
+
+                      if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] + (1 + i)], opColor))
+                        if (!this.checkPiece(c))
+                            m.push(c);
+                      if (this.checkPiece([p.pos[0] + (1 + i), p.pos[1] + (1 + i)], opColor))
+                        if (!this.checkPiece(c))
+                            m.push(c2);
                     }
                     
                     var op = this.getPieceAt([p.pos[0] - 1, p.pos[1]], opColor);
@@ -199,12 +224,15 @@ class Board {
                 else
                 {
                     for (let i = 0; i < 8; i++) {
-                        if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] - (1 + i)], opColor))
-                            if (!this.checkPiece([p.pos[0] - (2 * i), p.pos[1] - (2 * i)]))
-                              m.push([p.pos[0] - (2 * i),p.pos[1] - (2 * i), true, false]);
-                        if (this.checkPiece([p.pos[0] + (1 + i), p.pos[1] - (1 + i)], opColor))
-                            if (!this.checkPiece([p.pos[0] + (2 * i), p.pos[1] - (2 * i)]))
-                              m.push([p.pos[0] + (2 * i),p.pos[1] - (2 * i), true, false]);
+                      var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
+                      var c2 = [p.pos[0] - (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
+
+                      if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] - (1 + i)], opColor))
+                          if (!this.checkPiece(c))
+                            m.push(c);
+                      if (this.checkPiece([p.pos[0] + (1 + i), p.pos[1] - (1 + i)], opColor))
+                          if (!this.checkPiece(c2))
+                            m.push(c2);
                     }
 
                     var op = this.getPieceAt([p.pos[0] - 1, p.pos[1]], opColor);

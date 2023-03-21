@@ -197,20 +197,9 @@ io.on('connection', (socket) => {
       lobbies.every(v => {
         var shouldDelete = false;
         v.players.every(pp => {
-            log("Removed Player from Game", p.username + " from " + v.gameId);
-            remove(v.players, pp);
-            v.op = "";
-            v.playerNames = [];
-            v.players.forEach(c => {
-              v.playerNames.push(c.username);
-            });
-            v.playerCount--;
-            v.players.forEach(pp => {
-              pp.socket.emit("error", p.username + " left");
-              pp.lookingForLobby = false;
-              pp.socket.emit('lobby', {lobby: {isHost: pp.ip == v.host.ip && v.host.username == p.username, gameName: v.gameName, link: "http://normalchess.com/?challenge=" + v.gameId, gameId: v.gameId, playerCount: v.playerCount, players: v.playerNames}});
-            });
-            return true;
+          log("Removed Game", v.gameId + ", lack of a host.");
+          shouldDelete = true;
+          return false;
         });
         if (shouldDelete)
         {
@@ -451,6 +440,8 @@ io.on('connection', (socket) => {
 
       var tm = null;
 
+      var pawnTake = v["pTake"];
+
       moves.every(m => {
         if (m[0] == newPos[0] && m[1] == newPos[1])
         {
@@ -466,11 +457,24 @@ io.on('connection', (socket) => {
         p.socket.emit("error", "that piece can't move there!");
         return;
       }
+
+      if (piece.type == 1 && pawnTake)
+      {
+        var diff = newPos[0] - ppos[0];
+        var pieces = g.board.getAllTakenPiecesFromPawn(piece, diff > 0 ? 1 : -1, p.isWhite);
+        pieces.forEach(pe => {
+          g.board.removePiece(pe);
+        });
+      }
+      
+
       if (g.board.white)
         g.board.makeMove(ppos, newPos, 1, 0, tm[3]);
       else
         g.board.makeMove(ppos, newPos, 0, 1, tm[3]);
         
+
+      
       g.board.white = !g.board.white;
       
       if (g.board.winner != -1)
