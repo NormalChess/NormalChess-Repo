@@ -23,7 +23,7 @@ The pawn can now promote to a king. The enemy has to capture both kings to win.
 
 > Literally checkers
 
-The pawn can jump over pawns (not pieces) vertically on the board (in one direction, left or right), and can jump over more than one at a time.
+The pawn can jump over pawns (not pieces) vertically on the board. It will take the piece it jumps over, you can chain these in only one direction.
 
 Like checkers. (it is checkers)
 
