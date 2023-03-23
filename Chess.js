@@ -198,7 +198,7 @@ class Board {
                 {
                     for (let i = 0; i < 8; i++) {
                       var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
-                      var c2 = [p.pos[0] - (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
+                      var c2 = [p.pos[0] + (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
 
                       if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] + (1 + i)], opColor))
                         if (!this.checkPiece(c))
@@ -225,7 +225,7 @@ class Board {
                 {
                     for (let i = 0; i < 8; i++) {
                       var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
-                      var c2 = [p.pos[0] - (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
+                      var c2 = [p.pos[0] + (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
 
                       if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] - (1 + i)], opColor))
                           if (!this.checkPiece(c))
