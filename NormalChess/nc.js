@@ -272,40 +272,52 @@ function getAvaliableMoves(b, p)
                 // too lazy to look for a cleaner solution
                 var x1 = [];
                 var x2 = [];
-                if (!this.checkPiece(b, [p.pos[0] - 1, p.pos[1] + 1]) && !this.checkPiece(b, [p.pos[0] - 1, p.pos[1]]))
+                if (!checkPiece(b, [p.pos[0] - 1, p.pos[1] + 2, opColor]) && !checkPiece(b, [p.pos[0], p.pos[1] + 1]) && !checkPiece(b, [p.pos[0], p.pos[1] + 2]))
                 {
                     x1 = [p.pos[0] - 1, p.pos[1] + 2];
-                    x1.push(this.checkPiece(b, x1, opColor));
-                    x2 = [p.pos[0] - 2, p.pos[1] + 1];
-                    x2.push(this.checkPiece(b, x2, opColor));
+                    x1.push(checkPiece(b, x1, opColor));
                     m.push(x1);
+                }
+                if (!checkPiece(b, [p.pos[0] - 2, p.pos[1] + 1, opColor]) && !checkPiece(b, [p.pos[0] - 1, p.pos[1]]) && !checkPiece(b, [p.pos[0] - 2, p.pos[1]]))
+                {
+                    x2 = [p.pos[0] - 2, p.pos[1] + 1];
+                    x2.push(checkPiece(b, x2, opColor));
                     m.push(x2);
                 }
-                if (!this.checkPiece(b, [p.pos[0] + 1, p.pos[1] + 1]) && !this.checkPiece(b, [p.pos[0] + 1, p.pos[1]]))
+                if (!checkPiece(b, [p.pos[0] + 1, p.pos[1] + 2, opColor]) && !checkPiece(b, [p.pos[0], p.pos[1] + 1]) && !checkPiece(b, [p.pos[0], p.pos[1] + 2]))
                 {
                     x1 = [p.pos[0] + 1, p.pos[1] + 2];
-                    x1.push(this.checkPiece(b, x1, opColor));
-                    x2 = [p.pos[0] + 2, p.pos[1] + 1];
-                    x2.push(this.checkPiece(b, x2, opColor));
+                    x1.push(checkPiece(b, x1, opColor));
                     m.push(x1);
+                }
+                if (!checkPiece(b, [p.pos[0] + 2, p.pos[1] + 1, opColor]) && !checkPiece(b, [p.pos[0] + 1, p.pos[1]]) && !checkPiece(b, [p.pos[0] + 2, p.pos[1]]))
+                {
+                    x2 = [p.pos[0] + 2, p.pos[1] + 1];
+                    x2.push(checkPiece(b, x2, opColor));
                     m.push(x2);
                 }
-                if (!this.checkPiece(b, [p.pos[0] - 1, p.pos[1] - 1]) && !this.checkPiece(b, [p.pos[0] - 1, p.pos[1]]))
+                if (!checkPiece(b, [p.pos[0] - 1, p.pos[1] - 2, opColor]) && !checkPiece(b, [p.pos[0], p.pos[1] - 1]) && !checkPiece(b, [p.pos[0], p.pos[1] - 2]))
                 {
                     x1 = [p.pos[0] - 1, p.pos[1] - 2];
-                    x1.push(this.checkPiece(b, x1, opColor));
-                    x2 = [p.pos[0] - 2, p.pos[1] - 1];
-                    x2.push(this.checkPiece(b, x2, opColor));
+                    x1.push(checkPiece(b, x1, opColor));
                     m.push(x1);
+                }
+                if (!checkPiece(b, [p.pos[0] - 2, p.pos[1] - 1, opColor]) && !checkPiece(b, [p.pos[0] - 1, p.pos[1]]) && !checkPiece(b, [p.pos[0] - 2, p.pos[1]]))
+                {
+                    x2 = [p.pos[0] - 2, p.pos[1] - 1];
+                    x2.push(checkPiece(b, x2, opColor));
                     m.push(x2);
                 }
-                if (!this.checkPiece(b, [p.pos[0] + 1, p.pos[1] - 1]) && !this.checkPiece(b, [p.pos[0] + 1, p.pos[1]]))
+                if (!checkPiece(b, [p.pos[0] + 1, p.pos[1] - 2, opColor]) && !checkPiece(b, [p.pos[0], p.pos[1] - 1]) && !checkPiece(b, [p.pos[0], p.pos[1] - 2]))
                 {
                     x1 = [p.pos[0] + 1, p.pos[1] - 2];
-                    x1.push(this.checkPiece(b, x1, opColor));
-                    x2 = [p.pos[0] + 2, p.pos[1] - 1];
-                    x2.push(this.checkPiece(b, x2, opColor));
+                    x1.push(checkPiece(b, x1, opColor));
                     m.push(x1);
+                }
+                if (!checkPiece(b, [p.pos[0] + 2, p.pos[1] - 1, opColor]) && !checkPiece(b, [p.pos[0] + 1, p.pos[1]]) && !checkPiece(b, [p.pos[0] + 2, p.pos[1]]))
+                {
+                    x2 = [p.pos[0] + 2, p.pos[1] - 1];
+                    x2.push(checkPiece(b, x2, opColor));
                     m.push(x2);
                 }
                 break;
@@ -918,6 +930,7 @@ socket.on("error", function(v) {
 });
 
 socket.on("nick", function(v) {
+  gameId = '';
   move("nickname", 0, 0.01);
   move("lobby", 120, 0.01);
   move("game", 120, 0.01);
@@ -925,6 +938,7 @@ socket.on("nick", function(v) {
 });
 
 socket.on("lobbies", function(v) {
+    gameId = '';
     var lobbies = v["list"];
     username = v["username"];
 

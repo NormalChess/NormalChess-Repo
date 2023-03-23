@@ -273,6 +273,13 @@ io.on('connection', (socket) => {
             schat("Server", "Promoted!", g, p);
             g.colorPromotion = -1;
 
+            if (g.board.winner != -1)
+            {
+              chat("Game", g.board.winner == 0 ? "White won!" : "Black won!", g);
+              log("Game Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
+              remove(lobbies, g);
+            }
+
             g.players.forEach(pp => {
               pp.socket.emit("move", g.board);
             });
@@ -466,23 +473,13 @@ io.on('connection', (socket) => {
           g.board.removePiece(pe);
         });
       }
-      
-
       if (g.board.white)
         g.board.makeMove(ppos, newPos, 1, 0, tm[3]);
       else
         g.board.makeMove(ppos, newPos, 0, 1, tm[3]);
-        
 
-      
       g.board.white = !g.board.white;
       
-      if (g.board.winner != -1)
-      {
-        chat("Game", g.board.winner == 0 ? "White won!" : "Black won!", g);
-        log("Game Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
-        remove(lobbies, g);
-      }
 
       if ((newPos[1] == 7 || newPos[1] == 0) && piece.type == 1)
       {
@@ -490,6 +487,13 @@ io.on('connection', (socket) => {
         g.colorPromotion = piece.color;
         g.pieceToPromote = piece;
         return;
+      }
+      
+      if (g.board.winner != -1)
+      {
+        chat("Game", g.board.winner == 0 ? "White won!" : "Black won!", g);
+        log("Game Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
+        remove(lobbies, g);
       }
 
       g.players.forEach(pp => {

@@ -158,10 +158,11 @@ class Board {
             if (np != null)
             {
                 var coords = [np.pos[0] + (direction < 0 ? -1 : 1), white ? np.pos[1] + 1 : np.pos[1] - 1];
-                if (!this.checkPiece(coords, white ? 1 : 0))
-                    pieces.push(np);
-                else
-                    break;
+                if (coords[0] >= 0 && coords[0] <= 7 && coords[1] >= 0 && coords[1] <= 7)
+                    if (!this.checkPiece(coords, white ? 1 : 0))
+                        pieces.push(np);
+                    else
+                        break;
             }
         }
         return pieces;
@@ -204,7 +205,7 @@ class Board {
                         if (!this.checkPiece(c))
                             m.push(c);
                       if (this.checkPiece([p.pos[0] + (1 + i), p.pos[1] + (1 + i)], opColor))
-                        if (!this.checkPiece(c))
+                        if (!this.checkPiece(c2))
                             m.push(c2);
                     }
                     
@@ -328,43 +329,54 @@ class Board {
                 }
                 break;
             case 3: // knight
-                // too lazy to look for a cleaner solution
                 var x1 = [];
                 var x2 = [];
-                if (!this.checkPiece([p.pos[0] - 1, p.pos[1] + 1]) && !this.checkPiece([p.pos[0] - 1, p.pos[1]]))
+                if (!this.checkPiece([p.pos[0] - 1, p.pos[1] + 2, pColor]) && !this.checkPiece([p.pos[0], p.pos[1] + 1]) && !this.checkPiece([p.pos[0], p.pos[1] + 2]))
                 {
                     x1 = [p.pos[0] - 1, p.pos[1] + 2];
                     x1.push(this.checkPiece(x1, opColor));
+                    m.push(x1);
+                }
+                if (!this.checkPiece([p.pos[0] - 2, p.pos[1] + 1, pColor]) && !this.checkPiece([p.pos[0] - 1, p.pos[1]]) && !this.checkPiece([p.pos[0] - 2, p.pos[1]]))
+                {
                     x2 = [p.pos[0] - 2, p.pos[1] + 1];
                     x2.push(this.checkPiece(x2, opColor));
-                    m.push(x1);
                     m.push(x2);
                 }
-                if (!this.checkPiece([p.pos[0] + 1, p.pos[1] + 1]) && !this.checkPiece([p.pos[0] + 1, p.pos[1]]))
+                if (!this.checkPiece([p.pos[0] + 1, p.pos[1] + 2, pColor]) && !this.checkPiece([p.pos[0], p.pos[1] + 1]) && !this.checkPiece([p.pos[0], p.pos[1] + 2]))
                 {
                     x1 = [p.pos[0] + 1, p.pos[1] + 2];
                     x1.push(this.checkPiece(x1, opColor));
+                    m.push(x1);
+                }
+                if (!this.checkPiece([p.pos[0] + 2, p.pos[1] + 1, pColor]) && !this.checkPiece([p.pos[0] + 1, p.pos[1]]) && !this.checkPiece([p.pos[0] + 2, p.pos[1]]))
+                {
                     x2 = [p.pos[0] + 2, p.pos[1] + 1];
                     x2.push(this.checkPiece(x2, opColor));
-                    m.push(x1);
                     m.push(x2);
                 }
-                if (!this.checkPiece([p.pos[0] - 1, p.pos[1] - 1]) && !this.checkPiece([p.pos[0] - 1, p.pos[1]]))
+                if (!this.checkPiece([p.pos[0] - 1, p.pos[1] - 2, pColor]) && !this.checkPiece([p.pos[0], p.pos[1] - 1]) && !this.checkPiece([p.pos[0], p.pos[1] - 2]))
                 {
                     x1 = [p.pos[0] - 1, p.pos[1] - 2];
                     x1.push(this.checkPiece(x1, opColor));
+                    m.push(x1);
+                }
+                if (!this.checkPiece([p.pos[0] - 2, p.pos[1] - 1, pColor]) && !this.checkPiece([p.pos[0] - 1, p.pos[1]]) && !this.checkPiece([p.pos[0] - 2, p.pos[1]]))
+                {
                     x2 = [p.pos[0] - 2, p.pos[1] - 1];
                     x2.push(this.checkPiece(x2, opColor));
-                    m.push(x1);
                     m.push(x2);
                 }
-                if (!this.checkPiece([p.pos[0] + 1, p.pos[1] - 1]) && !this.checkPiece([p.pos[0] + 1, p.pos[1]]))
+                if (!this.checkPiece([p.pos[0] + 1, p.pos[1] - 2, pColor]) && !this.checkPiece([p.pos[0], p.pos[1] - 1]) && !this.checkPiece([p.pos[0], p.pos[1] - 2]))
                 {
                     x1 = [p.pos[0] + 1, p.pos[1] - 2];
                     x1.push(this.checkPiece(x1, opColor));
+                    m.push(x1);
+                }
+                if (!this.checkPiece([p.pos[0] + 2, p.pos[1] - 1, pColor]) && !this.checkPiece([p.pos[0] + 1, p.pos[1]]) && !this.checkPiece([p.pos[0] + 2, p.pos[1]]))
+                {
                     x2 = [p.pos[0] + 2, p.pos[1] - 1];
                     x2.push(this.checkPiece(x2, opColor));
-                    m.push(x1);
                     m.push(x2);
                 }
                 break;
@@ -679,10 +691,10 @@ class Board {
             this.winner = 0;
     }
 
-    makeMove(from, to, opColor, myColor, enpassant)
+    makeMove(from, to, opColor, pColor, enpassant)
     {
         var piece = this.getPieceAt(to, opColor);
-        var fpiece = this.getPieceAt(from, myColor);
+        var fpiece = this.getPieceAt(from, pColor);
         var take = false;
         if (piece != null)
         {
