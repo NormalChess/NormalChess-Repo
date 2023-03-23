@@ -31,6 +31,15 @@ Like checkers. (it is checkers)
 
 The knight broke it's legs. It cannot jump anymore. It can only walk between pieces to get to the square it normally could jump too.
 
+Examples:
+
+This knight has no moves
+
+![image](https://user-images.githubusercontent.com/123427599/227374523-c8e43eda-689a-4fa7-9d9f-5fca13923d30.png)
+
+This knight has two moves (because it can physically walk to those squares, if it could move one square at a time)
+
+![image](https://user-images.githubusercontent.com/123427599/227374631-3d9556ae-618a-49e3-bfab-8b335bf109d1.png)
 
 
 
