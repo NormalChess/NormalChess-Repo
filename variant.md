@@ -41,7 +41,19 @@ This knight has two moves (because it can physically walk to those squares, if i
 
 ![image](https://user-images.githubusercontent.com/123427599/227374631-3d9556ae-618a-49e3-bfab-8b335bf109d1.png)
 
+## Queen
 
+The queen is loyal to only it's own king, which means it cannot be caught cheating.
+
+The queen cannot take the enemy king.
+
+## Bishop
+
+The bishop can only move on every other turn (depending on its starting square, example: if its on black, you can move turn one (if there was no pawns). if its on white, you'd have to wait till the next turn to move.)
+
+## Rook
+
+The rook is too tall for the pawn and thus cannot be captured by it (because it jumps over the piece, and it is too tall)
 
 ## Chat
 
