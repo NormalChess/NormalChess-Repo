@@ -182,7 +182,7 @@ io.on('connection', (socket) => {
     if (getPlayer(socket.handshake.address) != null && !cfg.sameIpConnections)
     {
       socket.emit("nick");
-      socket.emit("error", "this server is configured to only have one player per ip. Sorry!");
+      socket.emit("error", "This server is configured to only have one player per ip. Sorry!");
       return;
     }
     var p = new nc.Player(socket.handshake.address);
