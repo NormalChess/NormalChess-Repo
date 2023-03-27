@@ -969,19 +969,16 @@ socket.on("lobbies", function(v) {
     
 });
 
-let bb = document.getElementById("startButton");
-bb.addEventListener("click", function() {
+document.getElementById("startButton").addEventListener("click", function() {
   socket.emit("start", gameId);
 });
 
 
-let b = document.getElementById("leaveButton");
-b.addEventListener("click", function() {
+document.getElementById("leaveButton").addEventListener("click", function() {
     socket.emit("leave", gameId);
 });
 
-let bbb = document.getElementById("resign");
-bbb.addEventListener("click", function() {
+document.getElementById("resign").addEventListener("click", function() {
     socket.emit("resign", gameId);
 });
 
