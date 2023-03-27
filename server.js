@@ -15,7 +15,7 @@ const { RateLimiterMemory } = require('rate-limiter-flexible');
 
 const yaml = require('js-yaml');
 
-const cfg = yaml.load(fs.readFileSync(__dirname + '\\config.yml', 'utf8')); 
+const cfg = yaml.load(fs.readFileSync(__dirname + '/config.yml', 'utf8'));
 
 
 const rateLimiter = new RateLimiterMemory(
