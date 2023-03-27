@@ -75,9 +75,6 @@ var username = "";
 // Store current gameId
 var gameId = "";
 
-if (urlParams.get('challenge') != null)
-  gameId = urlParams.get('challenge');
-
 // Store the current board
 var board = null;
 
@@ -884,6 +881,8 @@ form.addEventListener('submit', function(e) {
     return;
   let textbox = document.getElementById("textbox");
   e.preventDefault();
+  if (urlParams.get('challenge') != null)
+    gameId = urlParams.get('challenge');
   socket.emit('name', {name: textbox.value, id: gameId});
   textbox.value = '';
 });
