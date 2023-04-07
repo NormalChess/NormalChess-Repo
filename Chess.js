@@ -154,10 +154,13 @@ class Board {
                 t = -t;
             
 
-            var np = this.getPieceAt([p.pos[0] + t, white ? p.pos[1] + (1 + i) : p.pos[1] - (1 + i)], white ? 1 : 0);
+            var np = this.getPieceAt([p.pos[0] + t, 
+                (white ? p.pos[1] + (1 + i) : p.pos[1] - (1 + i))],
+                 white ? 1 : 0);
             if (np != null)
             {
-                var coords = [np.pos[0] + (direction < 0 ? -1 : 1), white ? np.pos[1] + 1 : np.pos[1] - 1];
+                var coords = [np.pos[0] + (direction < 0 ? -1 : 1), 
+                            (white ? np.pos[1] + 1 : np.pos[1] - 1)];
                 if (coords[0] >= 0 && coords[0] <= 7 && coords[1] >= 0 && coords[1] <= 7)
                     if (!this.checkPiece(coords, white ? 1 : 0))
                         pieces.push(np);
