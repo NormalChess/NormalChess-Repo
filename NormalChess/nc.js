@@ -136,13 +136,13 @@ function getAvaliableMoves(b, p)
                 {
   
                     for (let i = 0; i < 8; i++) {
-                      var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
-                      var c2 = [p.pos[0] + (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
+                      var c = [p.pos[0] - (2 * i), p.pos[1] + (2 * i), true, true];
+                      var c2 = [p.pos[0] + (2 * i), p.pos[1] + (2 * i), true, true];
 
-                      if (checkPiece(b,[p.pos[0] - (1 + i), p.pos[1] + (1 + i)], opColor))
+                      if (checkPiece(b,[p.pos[0] - 1, p.pos[1] + 1], opColor))
                           if (!checkPiece(b,c))
                             m.push(c);
-                      if (checkPiece(b,[p.pos[0] + (1 + i), p.pos[1] + (1 + i)], opColor))
+                      if (checkPiece(b,[p.pos[0] + 1, p.pos[1] + 1], opColor))
                           if (!checkPiece(b,c2))
                             m.push(c2);
                     }
@@ -163,13 +163,13 @@ function getAvaliableMoves(b, p)
                 else
                 {
                     for (let i = 0; i < 8; i++) {
-                      var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
-                      var c2 = [p.pos[0] + (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
+                      var c = [p.pos[0] - (2 * i), p.pos[1] - (2 * i), true, true];
+                      var c2 = [p.pos[0] + (2 * i), p.pos[1] - (2 * i), true, true];
 
-                      if (checkPiece(b,[p.pos[0] - (1 + i), p.pos[1] - (1 + i)], opColor))
+                      if (checkPiece(b,[p.pos[0] - 1, p.pos[1] - 1], opColor))
                           if (!checkPiece(b,c))
                             m.push(c);
-                      if (checkPiece(b,[p.pos[0] + (1 + i), p.pos[1] - (1 + i)], opColor))
+                      if (checkPiece(b,[p.pos[0] + 1, p.pos[1] - 1], opColor))
                           if (!checkPiece(b,c2))
                             m.push(c2);
                     }
@@ -929,6 +929,7 @@ socket.on("error", function(v) {
 });
 
 socket.on("nick", function(v) {
+  username = "";
   gameId = '';
   move("nickname", 0, 0.01);
   move("lobby", 120, 0.01);

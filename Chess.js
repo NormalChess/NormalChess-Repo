@@ -201,13 +201,13 @@ class Board {
                 if (p.color == 0)
                 {
                     for (let i = 0; i < 8; i++) {
-                      var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
-                      var c2 = [p.pos[0] + (2 * (i + 1)), p.pos[1] + (2 * (i + 1)), true, true];
+                      var c = [p.pos[0] - (2 * i), p.pos[1] + (2 * i), true, true];
+                      var c2 = [p.pos[0] + (2 * i), p.pos[1] + (2 * i), true, true];
 
-                      if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] + (1 + i)], opColor))
+                      if (this.checkPiece([p.pos[0] - 1, p.pos[1] + 1], opColor))
                         if (!this.checkPiece(c))
                             m.push(c);
-                      if (this.checkPiece([p.pos[0] + (1 + i), p.pos[1] + (1 + i)], opColor))
+                      if (this.checkPiece([p.pos[0] + 1, p.pos[1] + 1], opColor))
                         if (!this.checkPiece(c2))
                             m.push(c2);
                     }
@@ -228,13 +228,13 @@ class Board {
                 else
                 {
                     for (let i = 0; i < 8; i++) {
-                      var c = [p.pos[0] - (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
-                      var c2 = [p.pos[0] + (2 * (i + 1)), p.pos[1] - (2 * (i + 1)), true, true];
+                      var c = [p.pos[0] - (2 * i), p.pos[1] - (2 * i), true, true];
+                      var c2 = [p.pos[0] + (2 * i), p.pos[1] - (2 * i), true, true];
 
-                      if (this.checkPiece([p.pos[0] - (1 + i), p.pos[1] - (1 + i)], opColor))
+                      if (this.checkPiece([p.pos[0] - 1, p.pos[1] - + 1], opColor))
                           if (!this.checkPiece(c))
                             m.push(c);
-                      if (this.checkPiece([p.pos[0] + (1 + i), p.pos[1] - (1 + i)], opColor))
+                      if (this.checkPiece([p.pos[0] + 1, p.pos[1] - 1], opColor))
                           if (!this.checkPiece(c2))
                             m.push(c2);
                     }
