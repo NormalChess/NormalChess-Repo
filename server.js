@@ -247,7 +247,7 @@ io.on('connection', (socket) => {
 
         if (g.colorPromotion != -1)
         {
-          if (g.colorPromotion == 0 && p.isWhite)
+          if ((g.colorPromotion == 0 && p.isWhite) || (g.colorPromotion == 1 && !p.isWhite))
           {
             switch(c.message.toLowerCase())
             {
