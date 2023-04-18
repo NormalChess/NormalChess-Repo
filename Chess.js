@@ -200,18 +200,21 @@ class Board {
                 }
                 if (p.color == 0)
                 {
+  
                     for (let i = 0; i < 8; i++) {
-                      var c = [p.pos[0] - (2 * i), p.pos[1] + (2 * i), true, true];
-                      var c2 = [p.pos[0] + (2 * i), p.pos[1] + (2 * i), true, true];
+                      var incd = 1 + (i + 1);
+                      var inc = i + 1;
+                      var c = [p.pos[0] - (incd), p.pos[1] + (incd), true, true];
+                      var c2 = [p.pos[0] + (incd), p.pos[1] + (incd), true, true];
 
-                      if (this.checkPiece([p.pos[0] - 1, p.pos[1] + 1], opColor))
-                        if (!this.checkPiece(c))
+                      if (this.checkPiece([p.pos[0] - (inc), p.pos[1] + (inc)], opColor))
+                          if (!this.checkPiece(c))
                             m.push(c);
-                      if (this.checkPiece([p.pos[0] + 1, p.pos[1] + 1], opColor))
-                        if (!this.checkPiece(c2))
+                      if (this.checkPiece([p.pos[0] + (inc), p.pos[1] + (inc)], opColor))
+                          if (!this.checkPiece(c2))
                             m.push(c2);
                     }
-                    
+
                     var op = this.getPieceAt([p.pos[0] - 1, p.pos[1]], opColor);
                     var oop = this.getPieceAt([p.pos[0] + 1, p.pos[1]], opColor);
                     if (op != null)
@@ -228,17 +231,18 @@ class Board {
                 else
                 {
                     for (let i = 0; i < 8; i++) {
-                      var c = [p.pos[0] - (2 * i), p.pos[1] - (2 * i), true, true];
-                      var c2 = [p.pos[0] + (2 * i), p.pos[1] - (2 * i), true, true];
+                      var incd = 1 + (i + 1);
+                      var inc = i + 1;
+                      var c = [p.pos[0] - (incd), p.pos[1] - (incd), true, true];
+                      var c2 = [p.pos[0] + (incd), p.pos[1] - (incd), true, true];
 
-                      if (this.checkPiece([p.pos[0] - 1, p.pos[1] - + 1], opColor))
+                      if (this.checkPiece([p.pos[0] - (inc), p.pos[1] - (inc)], opColor))
                           if (!this.checkPiece(c))
                             m.push(c);
-                      if (this.checkPiece([p.pos[0] + 1, p.pos[1] - 1], opColor))
+                      if (this.checkPiece([p.pos[0] + (inc), p.pos[1] - (inc)], opColor))
                           if (!this.checkPiece(c2))
                             m.push(c2);
                     }
-
                     var op = this.getPieceAt([p.pos[0] - 1, p.pos[1]], opColor);
                     var oop = this.getPieceAt([p.pos[0] + 1, p.pos[1]], opColor);
                     if (op != null)
@@ -470,6 +474,10 @@ class Board {
                     var x4 = [p.pos[0], p.pos[1] - i];
                     if (!found[0])
                     {
+                        var rp = this.getPieceAt(x1, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = this.checkPiece(x1, opColor);
                         found[0] = take;
                         var c = true;
@@ -487,6 +495,10 @@ class Board {
                     }
                     if (!found[1])
                     {
+                        var rp = this.getPieceAt(x2, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = this.checkPiece(x2, opColor);
                         found[1] = take;
                         var c = true;
@@ -504,6 +516,10 @@ class Board {
                     }
                     if (!found[2])
                     {
+                        var rp = this.getPieceAt(x3, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = this.checkPiece(x3, opColor);
                         found[2] = take;
                         var c = true;
@@ -521,6 +537,10 @@ class Board {
                     }
                     if (!found[3])
                     {
+                        var rp = this.getPieceAt(x4, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = this.checkPiece(x4, opColor);
                         found[3] = take;
                         var c = true;
@@ -545,6 +565,10 @@ class Board {
                     var x4 = [p.pos[0] + i,p.pos[1] - i];
                     if (!found[0])
                     {
+                        var rp = this.getPieceAt(x1, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = this.checkPiece(x1, opColor);
                         found[0] = take;
                         var c = true;
@@ -562,6 +586,10 @@ class Board {
                     }
                     if (!found[1])
                     {
+                        var rp = this.getPieceAt(x2, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = this.checkPiece(x2, opColor);
                         found[1] = take;
                         var c = true;
@@ -579,6 +607,10 @@ class Board {
                     }
                     if (!found[2])
                     {
+                        var rp = this.getPieceAt(x3, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = this.checkPiece(x3, opColor);
                         found[2] = take;
                         var c = true;
@@ -596,6 +628,10 @@ class Board {
                     }
                     if (!found[3])
                     {
+                        var rp = this.getPieceAt(x4, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = this.checkPiece(x4, opColor);
                         found[3] = take;
                         var c = true;

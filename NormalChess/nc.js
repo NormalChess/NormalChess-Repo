@@ -136,13 +136,15 @@ function getAvaliableMoves(b, p)
                 {
   
                     for (let i = 0; i < 8; i++) {
-                      var c = [p.pos[0] - (2 * i), p.pos[1] + (2 * i), true, true];
-                      var c2 = [p.pos[0] + (2 * i), p.pos[1] + (2 * i), true, true];
+                      var incd = 1 + (i + 1);
+                      var inc = i + 1;
+                      var c = [p.pos[0] - (incd), p.pos[1] + (incd), true, true];
+                      var c2 = [p.pos[0] + (incd), p.pos[1] + (incd), true, true];
 
-                      if (checkPiece(b,[p.pos[0] - 1, p.pos[1] + 1], opColor))
+                      if (checkPiece(b,[p.pos[0] - (inc), p.pos[1] + (inc)], opColor))
                           if (!checkPiece(b,c))
                             m.push(c);
-                      if (checkPiece(b,[p.pos[0] + 1, p.pos[1] + 1], opColor))
+                      if (checkPiece(b,[p.pos[0] + (inc), p.pos[1] + (inc)], opColor))
                           if (!checkPiece(b,c2))
                             m.push(c2);
                     }
@@ -163,13 +165,15 @@ function getAvaliableMoves(b, p)
                 else
                 {
                     for (let i = 0; i < 8; i++) {
-                      var c = [p.pos[0] - (2 * i), p.pos[1] - (2 * i), true, true];
-                      var c2 = [p.pos[0] + (2 * i), p.pos[1] - (2 * i), true, true];
+                      var incd = 1 + (i + 1);
+                      var inc = i + 1;
+                      var c = [p.pos[0] - (incd), p.pos[1] - (incd), true, true];
+                      var c2 = [p.pos[0] + (incd), p.pos[1] - (incd), true, true];
 
-                      if (checkPiece(b,[p.pos[0] - 1, p.pos[1] - 1], opColor))
+                      if (checkPiece(b,[p.pos[0] - (inc), p.pos[1] - (inc)], opColor))
                           if (!checkPiece(b,c))
                             m.push(c);
-                      if (checkPiece(b,[p.pos[0] + 1, p.pos[1] - 1], opColor))
+                      if (checkPiece(b,[p.pos[0] + (inc), p.pos[1] - (inc)], opColor))
                           if (!checkPiece(b,c2))
                             m.push(c2);
                     }
@@ -405,6 +409,10 @@ function getAvaliableMoves(b, p)
                     var x4 = [p.pos[0], p.pos[1] - i];
                     if (!found[0])
                     {
+                        var rp = getPieceAt(b, x1, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = checkPiece(b, x1, opColor);
                         found[0] = take;
                         var c = true;
@@ -422,6 +430,10 @@ function getAvaliableMoves(b, p)
                     }
                     if (!found[1])
                     {
+                        var rp = getPieceAt(b, x2, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = checkPiece(b, x2, opColor);
                         found[1] = take;
                         var c = true;
@@ -439,6 +451,10 @@ function getAvaliableMoves(b, p)
                     }
                     if (!found[2])
                     {
+                        var rp = getPieceAt(b, x3, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = checkPiece(b, x3, opColor);
                         found[2] = take;
                         var c = true;
@@ -456,6 +472,10 @@ function getAvaliableMoves(b, p)
                     }
                     if (!found[3])
                     {
+                        var rp = getPieceAt(b, x4, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = checkPiece(b, x4, opColor);
                         found[3] = take;
                         var c = true;
@@ -480,6 +500,10 @@ function getAvaliableMoves(b, p)
                     var x4 = [p.pos[0] + i,p.pos[1] - i];
                     if (!found[0])
                     {
+                        var rp = getPieceAt(b, x1, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = checkPiece(b, x1, opColor);
                         found[0] = take;
                         var c = true;
@@ -497,6 +521,10 @@ function getAvaliableMoves(b, p)
                     }
                     if (!found[1])
                     {
+                        var rp = getPieceAt(b, x2, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = checkPiece(b, x2, opColor);
                         found[1] = take;
                         var c = true;
@@ -514,6 +542,10 @@ function getAvaliableMoves(b, p)
                     }
                     if (!found[2])
                     {
+                        var rp = getPieceAt(b, x3, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = checkPiece(b, x3, opColor);
                         found[2] = take;
                         var c = true;
@@ -531,6 +563,10 @@ function getAvaliableMoves(b, p)
                     }
                     if (!found[3])
                     {
+                        var rp = getPieceAt(b, x4, opColor);
+                        if (rp != null)
+                          if (rp.type == 6)
+                            continue;
                         var take = checkPiece(b, x4, opColor);
                         found[3] = take;
                         var c = true;
@@ -1001,11 +1037,6 @@ socket.on("lobby", function(v) {
     game.players.forEach(p => {
         list.innerHTML += "<h3>" + p + "</h3>";
     });
-
-    if (!game.isHost)
-      bb.disabled = true;
-    else
-      bb.disabled = false;
 });
 
 socket.on("chat", function(v) {
