@@ -45,6 +45,8 @@ class Lobby {
     started = false;
     isPrivate = false;
     board = null;
+    drawOffer = false;
+    drawPlayer = null;
 
     colorPromotion = -1;
     pieceToPromote = null;

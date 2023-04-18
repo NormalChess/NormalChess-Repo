@@ -1015,6 +1015,10 @@ document.getElementById("leaveButton").addEventListener("click", function() {
     socket.emit("leave", gameId);
 });
 
+document.getElementById("draw").addEventListener("click", function() {
+  socket.emit("draw", gameId);
+});
+
 document.getElementById("resign").addEventListener("click", function() {
     socket.emit("resign", gameId);
 });

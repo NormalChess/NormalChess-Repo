@@ -245,6 +245,18 @@ io.on('connection', (socket) => {
           return;
         }
 
+        if (g.drawOffer && c.message.toLowerCase() == "accept" && g.drawPlayer.username != p.username)
+        {
+          chat("Game", "Both sides agreed to a draw!", g);
+          log("Game Complete", g.gameId + ":" + g.gameName + " | Draw!");
+          g.board.winner = -2;
+          g.players.forEach(pp => {
+            pp.socket.emit("move", g.board);
+          });
+          remove(lobbies, g);
+          return;
+        }
+
         if (g.colorPromotion != -1)
         {
           if ((g.colorPromotion == 0 && p.isWhite) || (g.colorPromotion == 1 && !p.isWhite))
@@ -495,7 +507,11 @@ io.on('connection', (socket) => {
         log("Game Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
         remove(lobbies, g);
       }
-
+      if (g.drawOffer)
+      {
+          g.drawOffer = false;
+          chat("Game", "Draw decliend by move.", g);
+      }
       g.players.forEach(pp => {
         pp.socket.emit("move", g.board);
       });
@@ -551,6 +567,54 @@ io.on('connection', (socket) => {
       showLobbies(p.socket, p);
     });
 
+    socket.on('resign', (v) => {
+        if (rateLimit(socket))
+          return;
+      
+      if (!p.inLobby)
+        return;
+      var g = getLobby(v);
+      if (g == null || (!g.containsPlayer(p)))
+      {
+        p.socket.emit("error", "that game was not found");
+        return;
+      }
+      remove(lobbies, g);
+      players.forEach(pp => {
+        if (pp.ip != p.ip || pp.username != p.username)
+        {
+            showLobbies(pp.socket, pp);
+            pp.socket.emit("error", p.username + " has resigned!");
+        }
+        else
+        {
+          showLobbies(pp.socket, pp);
+          pp.socket.emit("error", "you have resigned!");
+        }
+      });
+    });
+
+    socket.on('draw', (v) => {
+      if (rateLimit(socket))
+          return;
+      
+      if (!p.inLobby)
+        return;
+      var g = getLobby(v);
+      if (g == null || (!g.containsPlayer(p)))
+      {
+        p.socket.emit("error", "that game was not found");
+        return;
+      }
+      if (g.drawOffer)
+      {
+        p.socket.emit("error", "a draw offer was already sent out.");
+        return;
+      }
+      g.drawOffer = true;
+      g.drawPlayer = p;
+      chat("Game", p.username + " has offered a draw. Please type 'accept' to accept it, or play a move to decline it.", g);
+    });
 
     socket.on('create', (v) => {
         if (rateLimit(socket))
