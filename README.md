@@ -17,8 +17,9 @@ node server.js
 
 Will get you up and running on localhost or a webserver listening to the 80 port.
 
-## WIP
+## TODO:
+- Finish all ideas in variant.md
+- Pagination on lobbies
 
-not done yet, but it's something.
-
-this is normal chess nothing wrong at all.
+## Post release TODO:
+- Spectating/Saving of games (for later view, including a move viewer)
