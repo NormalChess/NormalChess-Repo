@@ -248,7 +248,7 @@ io.on('connection', (socket) => {
         if (g.drawOffer && c.message.toLowerCase() == "accept" && g.drawPlayer.username != p.username)
         {
           chat("Game", "Both sides agreed to a draw!", g);
-          log("Game Complete", g.gameId + ":" + g.gameName + " | Draw!");
+          log("Lobby Complete", g.gameId + ":" + g.gameName + " | Draw!");
           g.board.winner = -2;
           g.players.forEach(pp => {
             pp.socket.emit("move", g.board);
@@ -288,7 +288,7 @@ io.on('connection', (socket) => {
             if (g.board.winner != -1)
             {
               chat("Game", g.board.winner == 0 ? "White won!" : "Black won!", g);
-              log("Game Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
+              log("Lobby Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
               remove(lobbies, g);
             }
 
@@ -504,7 +504,7 @@ io.on('connection', (socket) => {
       if (g.board.winner != -1)
       {
         chat("Game", g.board.winner == 0 ? "White won!" : "Black won!", g);
-        log("Game Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
+        log("Lobby Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
         remove(lobbies, g);
       }
       if (g.drawOffer)
