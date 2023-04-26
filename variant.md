@@ -72,7 +72,7 @@ Do you find yourself bored waiting for your opponent to make a move? Or are you 
 the commands "hit", "stay", or "fold" to start playing black jack. 
 
 By default you have 2 chips, and to win you have to get 11 chips. If you hit 21, you gain 2 chips. 
-If you lose, you forfit one of your chips. 
+If you lose, you forfit half of your chips. If you aren't at 1 chip after the half, you lose another 2 chips!
 
 When you get 11 chips as said before, you simply win the game. But if you lose all of your chips, you will lose the game.
 
