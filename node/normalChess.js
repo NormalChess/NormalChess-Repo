@@ -20,6 +20,11 @@ function remove(arr, value) {
     return arr;
 }
 
+function random(min, max)
+{
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
 
 class Player {
     socket = null;
@@ -27,9 +32,52 @@ class Player {
     username = "";
     inLobby = false;
     lookingForLobby = false;
+
+    inBlackjack = false;
+    chips = 2;
+    value = 0;
+    dealer = 0;
+    outcome = -1;
+    lossAmount = 0;
+
     constructor(ip)
     {
         this.ip = ip;
+    }
+
+    deal(stand)
+    {
+        if (!stand)
+            this.value += random(1,11);
+        this.dealer += random(1,11);
+        // cheats
+        if (this.dealer > 19 && this.dealer < 24)
+            this.dealer = 21;
+        if (this.value > 21 || this.dealer == 21)
+        {
+            this.outcome = 0;
+            this.lossAmount = this.chips / 2;
+            this.chips /= 2;
+            if (this.chips != 1)
+            {
+                this.chips -= 1;
+                this.lossAmount += 1;
+            }
+            this.chips = Math.floor(this.chips);
+            this.lossAmount = Math.floor(this.lossAmount);
+            if (this.chips < 0)
+                this.chips = 0;
+        }
+        else if (this.dealer > 21 || this.value == 21)
+        {   
+            if (this.value == 21 && this.dealer == 21)
+            {
+                this.outcome = 2;
+                return;
+            }
+            this.chips += 2;
+            this.outcome = 1;
+        }
     }
 }
 

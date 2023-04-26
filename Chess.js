@@ -121,6 +121,9 @@ class Board {
     moves = [];
     pieces = [];
 
+    blackPieces = 0;
+    whitePieces = 0;
+
     winner = -1;
 
     white = true;
@@ -728,6 +731,11 @@ class Board {
             this.winner = 1;
         if (bKings == 0)
             this.winner = 0;
+
+        if (piece.color == 0)
+            this.whitePieces--;
+        else
+            this.blackPieces--;
     }
 
     makeMove(from, to, opColor, pColor, enpassant)
@@ -777,6 +785,8 @@ class Board {
         {
             this.pieces.push(new Piece([i,6], 1, 1, 25 + i));
         }
+        this.blackPieces = 16;
+        this.whitePieces = 16;
     }
 }
 

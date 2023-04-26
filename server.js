@@ -170,6 +170,10 @@ function start(g, p)
   g.players[white].isWhite = true;
   var i = 0;
     g.players.forEach(pp => {
+      pp.chips = 2;
+      pp.value = 0;
+      pp.dealer = 0;
+      pp.inBlackjack = false;
       if (i == 0)
         lo.op = lo.players[1];
       else
@@ -300,8 +304,89 @@ io.on('connection', (socket) => {
             return;
           }
         }
-
+        
         chat(p.username,profanity.filter(c.message), g);
+
+        if (c.message.toLowerCase() == "uno" && (p.isWhite ? g.board.whitePieces == 1 : g.board.blackPieces == 1))
+        {
+          chat("Game", p.username = " called uno!", g);
+          g.board.winner = p.isWhite;
+          log("Lobby Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
+          g.players.forEach(pp => {
+            pp.socket.emit("move", g.board);
+          });
+          remove(lobbies, g);
+          return;
+        }
+        if (p.inBlackjack)
+        {
+          // we dont do p.deal(c.message.toLowerCase() == "stand") because-
+          // we woudln't be able to talk then, without saying the keywords-
+          // exactly.
+          if (c.message.toLowerCase() == "hit")
+            p.deal(false);
+          if (c.message.toLowerCase() == "stand")
+            p.deal(true);
+          
+          switch(p.outcome)
+          {
+            default:
+              chat("Dealer", p.username + "'s value: " + p.value + "; Dealer value: " + p.dealer + ". Stand, or hit?", g);
+              break;
+            case 0:
+              // lost
+              p.inBlackjack = false;
+              chat("Dealer", "It's a loss! Chips: " + p.chips + " (-" + p.lossAmount + ") | " + p.username + "'s value: " + p.value + "; Dealer value: " + p.dealer + ".", g);
+              p.value = 0;
+              p.dealer = 0;
+              break;
+            case 1:
+              // won
+              p.inBlackjack = false;
+              chat("Dealer", "It's a win! Chips: " + p.chips + " (+2) | " + p.username + "'s value: " + p.value + "; Dealer value: " + p.dealer + ".", g);
+              p.value = 0;
+              p.dealer = 0;
+              break;
+            case 2:
+              // draw
+              p.inBlackjack = false;
+              chat("Dealer", "It's a draw! Chips: " + p.chips + " (0) | " + p.username + "'s value: " + p.value + "; Dealer value: " + p.dealer + ".", g);
+              p.value = 0;
+              p.dealer = 0;
+              break;
+          }
+
+          if (p.chips == 11)
+          {
+            g.board.winner = p.isWhite;
+            chat("Game", p.username + "Got 11 chips!" + g.board.winner == 0 ? "White won!" : "Black won!", g);
+            log("Lobby Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
+            g.players.forEach(pp => {
+              pp.socket.emit("move", g.board);
+            });
+            remove(lobbies, g);
+            return;
+          }
+          else if (p.chips == 0)
+          {
+            g.board.winner = !p.isWhite;
+            chat("Game", p.username + " lost their chips! " + g.board.winner == 0 ? "White won!" : "Black won!", g);
+            log("Lobby Complete", g.gameId + ":" + g.gameName + " | " + (g.board.winner == 0 ? "White won!" : "Black won!"));
+            g.players.forEach(pp => {
+              pp.socket.emit("move", g.board);
+            });
+            remove(lobbies, g);
+            return;
+          }
+        }
+
+        if (c.message.toLowerCase() == "blackjack" && !p.inBlackjack)
+        {
+          p.inBlackjack = true;
+          p.deal(false);
+          p.outcome = -1;
+          chat("Dealer", "Round started, "  + p.username + "'s value: " + p.value + "; Dealer value: " + p.dealer + ". Stand, or hit?", g);
+        }
     })
 
     socket.on('name', (v) => {

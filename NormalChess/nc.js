@@ -1066,6 +1066,9 @@ socket.on("chat", function(v) {
 
 socket.on("start", function(v) {
   // Create chess and stuff
+  var el = document.getElementById("chatScroll");
+
+  el.innerHTML = "";
   board = v["board"];
   var l = v["lobby"];
   move("nickname", 120, 1);
