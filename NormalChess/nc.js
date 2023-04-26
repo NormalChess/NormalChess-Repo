@@ -81,6 +81,9 @@ var board = null;
 // Create a socket.io object
 var socket = io();
 
+// Selection squares
+var selectionSquares = []
+
 function getPieceAt(board, pos, color = -1)
 {
     var p = null;
@@ -768,6 +771,17 @@ function movePiece(oldPos, newPos, pawnTake)
   socket.emit("move", {gameId: gameId, piecePos: oldPos, newPos: newPos, pTake: pawnTake});
 }
 
+function setSelected(pos)
+{
+  var id = getFile(pos[0]) + (pos[1] + 1);
+
+
+  var c = document.getElementById(id);
+  c.style.backgroundColor = "#bbcb2b";
+
+  selectionSquares.push(c);
+}
+
 function setSVG(pos, type, color, board)
 {
   var id = getFile(pos[0]) + (pos[1] + 1);
@@ -1154,12 +1168,18 @@ function leaveGame(e)
   leave.disabled = true;
 }
 
-socket.on("move", function(b) {
-  board = b;
+socket.on("move", function(info) {
+  board = info["b"];
   svg = [];
   state = setPieces(board);
   inverseClearBasedOn(state);
   setListMoves(board.moves);
+  selectionSquares.forEach(s => {
+    s.style.backgroundColor = s.getAttribute("data-originalColor");
+  });
+  selectionSquares = [];
+  setSelected(info["movePos"]["ppos"]);
+  setSelected(info["movePos"]["newPos"]);
   if (board.winner != -1)
   {
     draw.disabled = true;

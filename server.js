@@ -43,6 +43,7 @@ var players = [];
 
 var lobbies = [];
 
+
 const getPlayer = (ip) => {
   var rp = null;
   players.every(p => {
@@ -513,7 +514,7 @@ io.on('connection', (socket) => {
           chat("Game", "Draw decliend by move.", g);
       }
       g.players.forEach(pp => {
-        pp.socket.emit("move", g.board);
+        pp.socket.emit("move", {"b": g.board, "movePos": {ppos, newPos}});
       });
 
     });
