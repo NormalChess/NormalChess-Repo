@@ -138,7 +138,7 @@ function getAvaliableMoves(b, p)
                 if (p.color == 0)
                 {
   
-                    for (let i = 0; i < 8; i++) {
+                    for (var i = 0; i < 8; i++) {
                       var incd = 1 + (i + 1);
                       var inc = i + 1;
                       var c = [p.pos[0] - (incd), p.pos[1] + (incd), true, true];
@@ -167,7 +167,7 @@ function getAvaliableMoves(b, p)
                 }
                 else
                 {
-                    for (let i = 0; i < 8; i++) {
+                    for (var i = 0; i < 8; i++) {
                       var incd = 1 + (i + 1);
                       var inc = i + 1;
                       var c = [p.pos[0] - (incd), p.pos[1] - (incd), true, true];
@@ -929,7 +929,7 @@ var form2 = document.getElementById('lobbyForm');
 form.addEventListener('submit', function(e) {
   if (username.length > 0)
     return;
-  let textbox = document.getElementById("textbox");
+  var textbox = document.getElementById("textbox");
   e.preventDefault();
   if (urlParams.get('challenge') != null)
     gameId = urlParams.get('challenge');
@@ -938,8 +938,8 @@ form.addEventListener('submit', function(e) {
 });
 
 
-let tbox1 = document.getElementsByClassName("lobbyText")[0];
-let check = document.getElementsByClassName("checkLobby")[0];
+var tbox1 = document.getElementsByClassName("lobbyText")[0];
+var check = document.getElementsByClassName("checkLobby")[0];
 tbox1.addEventListener("keypress", function(event) {
   if (event.key === "Enter" && gameId.length == 0) {
     if (tbox1.value) {
@@ -949,7 +949,7 @@ tbox1.addEventListener("keypress", function(event) {
   }
 });
 
-let tbox3 = document.getElementById("chatbox");
+var tbox3 = document.getElementById("chatbox");
 tbox3.addEventListener("keypress", function(event) {
   if (event.key === "Enter" && gameId.length != 0) {
     if (tbox3.value) {
@@ -962,7 +962,7 @@ tbox3.addEventListener("keypress", function(event) {
   }
 });
 
-let tbox2 = document.getElementsByClassName("codeText")[0];
+var tbox2 = document.getElementsByClassName("codeText")[0];
 tbox2.addEventListener("keypress", function(event) {
   
     if (event.key === "Enter" && gameId.length == 0) {
@@ -992,32 +992,32 @@ socket.on("lobbies", function(v) {
     var lobbies = v["list"];
     username = v["username"];
 
-    let n = document.querySelector("#name");
+    var n = document.querySelector("#name");
     n.innerHTML = "You are playing as: <b style='color: lightblue'>" + username + "</b>";
-
-    move("nickname", 120, 1);
-    move("lobby", 120, 1);
-    move("game", 120, 1);
-    move("lobbies", 0, 1);
     
     var lobs = document.querySelector("#lobs");
     lobs.innerHTML = "";
 
     if (lobbies.length == 0)
     {
-        lobs.innerHTML = "<h3>No lobbies found!<p>\nWhy don't you make one?</p></h3>";
+        lobs.innerHTML = "<p>No lobbies found!</p>";
     }
     else
     {
         lobbies.forEach(l => {
-            lobs.innerHTML += "<h3><p><b>" + l.gameName + "</b></p><p>Players: " + l.playerCount.toString() + "/2 </p><button id='" + l.gameId + "join'>Join</button></h3>";
-            let b = document.getElementById(l.gameId + "join");
+            lobs.innerHTML += "<p><b>" + l.gameName + "</b></p><p>Players: " + l.playerCount.toString() + "/2 </p><button id='" + l.gameId + "join'>Join</button>";
+            var b = document.getElementById(l.gameId + "join");
             b.addEventListener("click", function() {
                 socket.emit("join", l.gameId);
             });
         });
     }
     
+    move("nickname", 120, 1);
+    move("lobby", 120, 1);
+    move("game", 120, 1);
+    move("lobbies", -100, 1);
+
 });
 
 document.getElementById("startButton").addEventListener("click", function() {
@@ -1043,14 +1043,14 @@ socket.on("lobby", function(v) {
     move("nickname", 120, 1);
     move("lobbies", 120, 1);
     move("game", 120, 1);
-    move("lobby", 0, 1);
+    move("lobby", -200, 1);
 
     var lobs = document.querySelector("#lobs");
     lobs.innerHTML = "";
 
-    let ln = document.getElementById("lobbyName");
+    var ln = document.getElementById("lobbyName");
     ln.innerHTML = game.gameName + " <p>" + game.link + "</p>\n<p>Players: " + game.playerCount.toString() + "/2</p>";
-    let list = document.getElementById("players");
+    var list = document.getElementById("players");
     list.innerHTML = "";
     game.players.forEach(p => {
         list.innerHTML += "<h3>" + p + "</h3>";
@@ -1073,7 +1073,7 @@ socket.on("start", function(v) {
   var l = v["lobby"];
   move("nickname", 120, 1);
   move("lobbies", 120, 1);
-  move("game", 0, 1);
+  move("game", -200, 1);
   move("lobby", 120, 1);
 
   myColor = v["isWhite"] ? 0 : 1;
@@ -1120,6 +1120,8 @@ socket.on("start", function(v) {
           cell.style.flexWrap = "wrap";
           cell.style.alignItems = "center";
           cell.style.justifyContent = "center";
+          cell.style.maxWidth = "calc(100% / 8)";
+          cell.style.maxHeight = "calc(100% / 8)";
           cell.style.accentColor = cell.style.backgroundColor;
           cell.setAttribute("data-originalColor", cell.style.backgroundColor);
           // Add the cell to the chessboard div
@@ -1138,8 +1140,8 @@ socket.on("start", function(v) {
   chessboard.style.flexWrap = "wrap";
   chessboard.style.alignItems = "center";
   chessboard.style.justifyContent = "center";
-  chessboard.style.maxWidth = "70%";
-  chessboard.style.maxHeight = "70%";
+  chessboard.style.maxWidth = "26vw";
+  chessboard.style.maxHeight = "40vh";
 
 });
 
